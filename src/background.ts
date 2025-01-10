@@ -1,6 +1,6 @@
 'use strict';
 
-import {app, protocol, BrowserWindow} from 'electron';
+import {app, protocol, BrowserWindow, session} from 'electron';
 import {createProtocol} from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, {VUEJS3_DEVTOOLS} from 'electron-devtools-installer';
 
@@ -16,12 +16,16 @@ async function createWindow() {
     const win = new BrowserWindow({
         width: 800,
         height: 600,
+        frame: false,
+        icon: "./src/assets/icon.jpg",
         webPreferences: {
 
             // Use pluginOptions.nodeIntegration, leave this alone
             // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
             nodeIntegration: (process.env
                 .ELECTRON_NODE_INTEGRATION as unknown) as boolean,
+            // nodeIntegration: true,
+            enableRemoteModule: true,
             contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION
         }
     });
@@ -44,6 +48,25 @@ async function createWindow() {
         // Load the index.html when not in development
         win.loadURL('app://./index.html');
     }
+
+    let ipcMain = require('electron').ipcMain;
+//接收最小化命令
+    ipcMain.on('window-min', function() {
+        win.minimize();
+    })
+//接收最大化命令
+    ipcMain.on('window-max', function() {
+        if (win.isMaximized()) {
+            win.restore();
+        } else {
+            win.maximize();
+        }
+    })
+//接收关闭命令
+    ipcMain.on('window-close', function() {
+        win.close();
+    })
+
 }
 
 // Quit when all windows are closed.
