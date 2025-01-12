@@ -19,7 +19,7 @@ function setCookie() {
     <div class="loginContainer">
         <h1>设置Cookie</h1>
         <p>在浏览器中登录教务系统，然后按F12，切换到控制台（Console），粘贴以下代码 <pre>document.cookie</pre>，回车运行，复制输出的代码，粘贴到下面输入框中，点击设置即可。</p>
-        <el-form>
+        <el-form label-width="auto">
             <el-form-item label="Cookie">
                 <el-input v-model="cookie"></el-input>
             </el-form-item>

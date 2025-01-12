@@ -4,6 +4,7 @@ import router from './router'
 const app = createApp(App)
 
 import ElementPlus from 'element-plus'
+import {Table} from "element-plus/es/el-table/src/table/defaults";
 import '@/element-variables.scss'
 import locale from 'element-plus/lib/locale/lang/zh-cn'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'

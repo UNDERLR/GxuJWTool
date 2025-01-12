@@ -1,5 +1,6 @@
 'use strict';
 
+import {Http} from "@/electron/http";
 import {app, protocol, BrowserWindow, session} from 'electron';
 import {createProtocol} from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, {VUEJS3_DEVTOOLS} from 'electron-devtools-installer';
@@ -50,6 +51,9 @@ async function createWindow() {
     }
 
     let ipcMain = require('electron').ipcMain;
+    ipcMain.handle("http",async (e, ...args)=>{
+        return await Http(args);
+    })
 //接收最小化命令
     ipcMain.on('window-min', function() {
         win.minimize();

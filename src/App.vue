@@ -1,12 +1,12 @@
 <template>
-  <el-container>
-    <el-header>
-      <NormalHeader />
-    </el-header>
-    <el-main>
-      <router-view />
-    </el-main>
-  </el-container>
+    <el-container>
+        <el-header>
+            <NormalHeader/>
+        </el-header>
+        <el-main>
+            <router-view></router-view>
+        </el-main>
+    </el-container>
 </template>
 
 <script setup lang="ts">
@@ -29,6 +29,9 @@ import NormalHeader from "@/components/NormalHeader.vue";
         flex: 1;
         overflow: scroll;
         box-sizing: border-box;
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 }
 </style>
