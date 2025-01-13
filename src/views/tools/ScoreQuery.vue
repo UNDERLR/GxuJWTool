@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {jwxt} from "@/ts/jwxt";
 import {ElMessage} from "element-plus";
 import {getCurrentInstance, ref} from "vue";
 import {BrowserWindow, ipcRenderer} from "electron";
@@ -92,7 +93,10 @@ function queryScore() {
                 data.value.result = res;
                 localStorage.setItem("score", JSON.stringify(res));
                 ElMessage.success("查询成功");
-            } else ElMessage.error("查询失败，请尝试重新登录");
+            } else {
+                ElMessage.error("查询失败，尝试刷新重新获取Cookie...");
+                jwxt.refreshCookie();
+            }
             console.log(res);
         });
 }
