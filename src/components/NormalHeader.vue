@@ -64,7 +64,7 @@ function closeHandler() {
 </template>
 
 <style scoped lang="scss">
-@import "@/element-variables";
+@import "@/global";
 .header {
     $headerHeight: 50px;
 
@@ -72,7 +72,7 @@ function closeHandler() {
     align-items: center;
     justify-content: center;
     position: relative;
-    background-color: mix($--el-color-primary, #fff, 45%);
+    background-color: mix($--color-primary , #fff, 45%);
     height: $headerHeight;
     user-select: none;
     -webkit-app-region: drag;
