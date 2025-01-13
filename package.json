@@ -1,6 +1,8 @@
 {
   "name": "gxu-jw-tool",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "author": "HuanChen",
+  "description": "广西大学教务系统工具",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

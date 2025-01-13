@@ -33,6 +33,8 @@ function submit() {
 <template>
     <el-card shadow="hover">
         <h1>登录</h1>
+        <p>请输入教务系统的用户名和密码，默认保存登录信息，当cookie失效时自动获取。</p>
+        <p>重新输入用户名或密码后，重新登录可修改保存的登录信息。</p>
         <el-form
             label-width="auto"
             :model="data.form"

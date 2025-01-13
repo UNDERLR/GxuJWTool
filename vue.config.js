@@ -7,7 +7,7 @@ module.exports = defineConfig({
                 // 在这里的配置将会和默认配置合并，然后传递给electron-builder
                 appId: 'com.gxu.jwxttool', // 项目唯一标识
                 productName: '广西大学教务系统工具', // 打包产物的前缀
-                copyright: 'Copyright © year HuanChen', // 可用使用${}引用package.json里面配置项，配置项不存在会报错
+                copyright: 'Copyright © 2025 ${author}', // 可用使用${}引用package.json里面配置项，配置项不存在会报错
                 directories: {
                     output: 'dist_electron' // 打包产物的位置
                 },
