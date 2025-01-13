@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "strict": true,
+    "strict": false,
     "jsx": "preserve",
     "moduleResolution": "node",
     "skipLibCheck": true,
@@ -10,6 +10,8 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "useDefineForClassFields": true,
+    "allowJs": true,
+    "noImplicitAny": false,
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
@@ -35,6 +37,6 @@
     "tests/**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "./node_modules"
   ]
 }

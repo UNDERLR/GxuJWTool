@@ -1,13 +1,8 @@
-<template>
-  <div class="home">
-    <el-button
-      type="primary"
-      @click="$router.push('/setCookie')"
-    >
-      设置Cookie
-    </el-button>
-  </div>
-</template>
+<script lang="ts" setup>
+import LoginCard from "@/views/Home/LoginCard.vue";
 
-<script lang="ts">
 </script>
+
+<template>
+    <LoginCard/>
+</template>

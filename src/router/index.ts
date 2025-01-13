@@ -1,34 +1,37 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import {defineAsyncComponent} from "vue";
+import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router';
 
 
 const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    name: 'home',
-    component: import('@/views/Home.vue')
-  },
-  {
-    path: '/tools',
-    name: 'tools',
-    component: import('@/views/Tools.vue')
-  },
-  {
-    path: '/settings',
-    name: 'settings',
-    component: import('@/views/Settings.vue'),
-    children:[
-      {
-        path: '/setCookie',
-        name: 'setCookie',
-        component: import('@/views/settings/SetCookie.vue')
-      },
-    ]
-  },
-]
+    {
+        path: '/',
+        name: 'home',
+        component: defineAsyncComponent(() => import('@/views/Home.vue'))
+    },
+    {
+        path: '/tools',
+        name: 'tools',
+        component: defineAsyncComponent(() => import('@/views/Tools.vue')),
+        children: [
+            {
+                path: 'scoreQuery',
+                name: 'scoreQuery',
+                component: defineAsyncComponent(() => import('@/views/tools/ScoreQuery.vue'))
+            },
+        ]
+    },
+    {
+        path: '/settings',
+        name: 'settings',
+        component: defineAsyncComponent(() => import('@/views/Settings.vue')),
+        children: [
+        ]
+    },
+];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+    history: createWebHistory(process.env.BASE_URL),
+    routes
+});
 
-export default router
+export default router;
