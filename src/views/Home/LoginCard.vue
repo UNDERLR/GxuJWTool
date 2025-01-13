@@ -13,7 +13,7 @@ function openLoginWindow() {
 function getCookies() {
     ipcRenderer.invoke("jwxt", "getCookies")
         .then(res => {
-            if (res.length >=2){
+            if (res?.length >=2){
                 res.forEach(cookie => {
                     document.cookie = `${cookie.name}=${cookie.value};expires= Fri, 31 Dec 9999 23:59:59 GMT`;
                 });
