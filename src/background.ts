@@ -1,10 +1,11 @@
 'use strict';
 
 import {Http} from "@/electron/http";
+import {jwxt} from "@/electron/jwxt";
 import {app, protocol, BrowserWindow, session} from 'electron';
 import {createProtocol} from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, {VUEJS3_DEVTOOLS} from 'electron-devtools-installer';
-
+import {ipcMain} from 'electron';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 // Scheme must be registered before the app is ready
@@ -16,7 +17,9 @@ async function createWindow() {
     // Create the browser window.
     const win = new BrowserWindow({
         width: 800,
+        minWidth: 800,
         height: 600,
+        minHeight: 600,
         frame: false,
         icon: "./src/assets/icon.jpg",
         webPreferences: {
@@ -49,10 +52,15 @@ async function createWindow() {
         // Load the index.html when not in development
         win.loadURL('app://./index.html');
     }
+    // 启动时获取route cookie
+    const routeCookie = await jwxt.getRouteCookie();
+    await win.webContents.executeJavaScript(`document.cookie="${routeCookie}; Expires=Expires=Thu, 01 Jan 9999 00:00:01 GMT;"`)
 
-    let ipcMain = require('electron').ipcMain;
     ipcMain.handle("http",async (e, ...args)=>{
         return await Http(args);
+    })
+    ipcMain.handle("jwxt",async (e, ...args)=>{
+        return await jwxt.ipcHandler(args);
     })
 //接收最小化命令
     ipcMain.on('window-min', function() {

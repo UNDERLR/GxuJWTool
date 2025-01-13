@@ -1,7 +1,8 @@
-<template>
-  <div class="home">
-  </div>
-</template>
+<script lang="ts" setup>
+import LoginCard from "@/views/Home/LoginCard.vue";
 
-<script lang="ts">
 </script>
+
+<template>
+    <LoginCard/>
+</template>

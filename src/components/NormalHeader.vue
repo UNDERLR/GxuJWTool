@@ -33,7 +33,8 @@ function closeHandler() {
                 @select="menuHandler"
                 router
                 background-color="transparent"
-                text-color="#eee"
+                :ellipsis="false"
+                text-color="#333"
                 active-text-color="#fff"
                 mode="horizontal">
                 <el-menu-item index="home">首页</el-menu-item>
@@ -71,26 +72,18 @@ function closeHandler() {
     align-items: center;
     justify-content: center;
     position: relative;
-    background-color: mix($--color-primary, #fff, 45%);
+    background-color: mix($--el-color-primary, #fff, 45%);
     height: $headerHeight;
     user-select: none;
     -webkit-app-region: drag;
 
-    .el-menu--horizontal > .el-menu-item {
-        height: $headerHeight - 1px;
-        line-height: $headerHeight - 1px;
-        color: #fff !important;
-
-        &:hover {
-            background-color: rgba(255, 255, 255, 0.2) !important;
-        }
-    }
 
     & > div {
         top: 0;
         height: 100%;
         display: flex;
         align-items: center;
+        overflow: hidden;
     }
 
     .headerLeft {

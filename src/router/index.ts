@@ -25,11 +25,6 @@ const routes: Array<RouteRecordRaw> = [
         name: 'settings',
         component: defineAsyncComponent(() => import('@/views/Settings.vue')),
         children: [
-            {
-                path: 'setCookie',
-                name: 'setCookie',
-                component: defineAsyncComponent(() => import('@/views/settings/SetCookie.vue'))
-            },
         ]
     },
 ];

@@ -15,6 +15,11 @@
     "rules": {
         "vue/multi-word-component-names": 0,
         "vue/no-unused-components": 0,
+        "vue/max-attributes-per-line": 0,
+        "vue/attributes-order": 0,
+        "vue/html-closing-bracket-newline": 0,
+        "vue/html-closing-bracket-spacing": 0,
+        "vue/singleline-html-element-content-newline": 0,
         "vue/html-indent": 0,
         "vue/no-unused-vars": 0,
         "vue/valid-v-for": 0,
