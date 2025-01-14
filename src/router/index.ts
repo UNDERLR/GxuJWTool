@@ -11,8 +11,14 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/tools',
         name: 'tools',
+        redirect: '/tools/index',
         component: defineAsyncComponent(() => import('@/views/Tools.vue')),
         children: [
+            {
+                path: 'index',
+                name: 'index',
+                component: defineAsyncComponent(() => import('@/views/tools/index.vue'))
+            },
             {
                 path: 'scoreQuery',
                 name: 'scoreQuery',

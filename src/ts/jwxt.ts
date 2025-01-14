@@ -5,6 +5,11 @@ import {cookie} from "@/ts/cookie";
 function refreshCookie(){
     return new Promise((resolve, reject) => {
         const logData = JSON.parse(localStorage.getItem("logData") ?? "{}");
+        if (!logData.username || !logData.password) {
+            ElMessage.error("请先登录设置用户名和密码，自动刷新Cookie才能正常使用");
+            resolve(null);
+            return;
+        }
         ElMessage.info("正在重新获取Cookie...");
         ipcRenderer.invoke("jwxt", "autoGetCookies", logData.username, logData.password)
             .then(res => {
