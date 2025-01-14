@@ -9,8 +9,6 @@ import LoginCard from "@/views/Home/LoginCard.vue";
         fill
         style="width: 100%;"
         direction="vertical">
-        <AutoLogin/>
-        <!--手动登录-->
-        <!--<LoginCard/>-->
+        <LoginCard/>
     </el-space>
 </template>

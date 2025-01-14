@@ -55,7 +55,7 @@ async function login() {
         width: 800,
         height: 600,
     });
-    await win.loadURL(`https://jwxt2018.gxu.edu.cn/jwglxt/xtgl/login_slogin.html?time=${Date.now()}`);
+    win.loadURL(`https://jwxt2018.gxu.edu.cn/jwglxt/xtgl/login_slogin.html?time=${Date.now()}`);
 }
 
 async function getCookies() {
