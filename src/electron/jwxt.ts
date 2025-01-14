@@ -12,7 +12,7 @@ async function getRouteCookie() {
 }
 
 async function autoGetCookies(username: string, password: string) {
-    return await new Promise((resolve) => {
+    return await new Promise((resolve, reject) => {
         const win = new BrowserWindow({
             width: 800,
             height: 600,
@@ -30,6 +30,11 @@ async function autoGetCookies(username: string, password: string) {
     document.getElementById("mm").value = "${password}"
     document.getElementById("dl").click();`);
                 }, 100);
+                // 判断是否登录成功
+                setTimeout( async () => {
+                    if (win.webContents.getURL().includes("login_slogin.html"))
+                        resolve(await win.webContents.executeJavaScript("document.getElementById(\"tips\").innerText"));
+                }, 5000);
             } else if (url.includes("index_initMenu.html")) {
                 // 获取cookie
                 res = await win.webContents.session.cookies.get({

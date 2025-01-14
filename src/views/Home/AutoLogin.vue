@@ -19,12 +19,13 @@ function submit() {
     ElMessage.info("正在登录...");
     ipcRenderer.invoke("jwxt", "autoGetCookies", data.value.form.username, data.value.form.password)
         .then(res => {
-            if (res?.length >= 2) {
+            console.log(res);
+            if (res?.length >= 2 && Array.isArray(res)) {
                 res.forEach(cookie => {
                     document.cookie = `${cookie.name}=${cookie.value};expires= Fri, 31 Dec 9999 23:59:59 GMT`;
                 });
                 ElMessage.success("获取成功");
-            } else ElMessage.error("获取失败，请重试");
+            } else ElMessage.error(`获取失败，请重试。错误信息：${res}`);
         });
 
 }
@@ -43,7 +44,7 @@ function submit() {
                 <el-input v-model="data.form.username"/>
             </el-form-item>
             <el-form-item label="密码">
-                <el-input type="password" v-model="data.form.password"/>
+                <el-input type="password" show-password v-model="data.form.password"/>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="submit">登录</el-button>

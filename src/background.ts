@@ -2,6 +2,7 @@
 
 import {Http} from "@/electron/http";
 import {jwxt} from "@/electron/jwxt";
+import * as electron from "electron";
 import {app, protocol, BrowserWindow, session} from 'electron';
 import {createProtocol} from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, {VUEJS3_DEVTOOLS} from 'electron-devtools-installer';
@@ -80,7 +81,7 @@ async function createWindow() {
     })
 //接收关闭命令
     ipcMain.on('window-close', function() {
-        win.close();
+        win.destroy();
     })
 
 }
