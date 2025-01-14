@@ -50,7 +50,11 @@ async function createWindow() {
     } else {
         createProtocol('app');
         // Load the index.html when not in development
-        win.loadURL('app://./index.html');
+        // 通过点击首页按钮初始化首页
+        win.loadURL('app://./index.html')
+            .then(()=>{
+                win.webContents.executeJavaScript("document.querySelector(\"#app > section > header > div > div.headerCenter > ul > li:nth-child(1)\").click()");
+            })
     }
     // 启动时获取route cookie
     const routeCookie = await jwxt.getRouteCookie();
