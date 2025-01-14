@@ -1,16 +1,17 @@
 <script setup lang="ts">
 
+import {cookie} from "@/ts/cookie";
 import {ElMessage} from "element-plus";
 
 function copyCookie() {
-    const cookie = document.cookie;
+    const text = cookie.getFormatted();
     const el = document.createElement('textarea');
-    el.value = cookie;
+    el.value = text;
     document.body.appendChild(el);
     el.select();
     document.execCommand('copy');
     document.body.removeChild(el);
-    ElMessage.success('复制成功');
+    ElMessage.success(`成功复制Cookie: ${text}`);
 }
 </script>
 

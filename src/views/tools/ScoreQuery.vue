@@ -90,17 +90,20 @@ function queryScore() {
     console.log(formData);
     ipcRenderer.invoke("http", "post", "https://jwxt2018.gxu.edu.cn/jwglxt/cjcx/cjcx_cxXsgrcj.html?doType=query", formData, headers)
         .then(res => {
+            if (!res) return;
             if (typeof res === "object") {
                 data.value.result = res;
                 localStorage.setItem("score", JSON.stringify(res));
                 ElMessage.success("查询成功");
             } else {
-                ElMessage.error("查询失败，尝试刷新重新获取Cookie...");
+                ElMessage.error("查询失败，尝试重新获取Cookie...");
                 jwxt.refreshCookie()
-                    .then(()=>{
-                        ElMessage.success("尝试重新查询...");
-                        queryScore();
-                    })
+                    .then(res => {
+                        if (Array.isArray(res) && res.length >= 2) {
+                            ElMessage.success("尝试重新查询...");
+                            queryScore();
+                        }
+                    });
             }
             console.log(res);
         });
@@ -110,11 +113,17 @@ function handleDetail(index: number) {
     data.value.dialog.content = [];
     let ori = data.value.result.items[index];
     for (const key in ori) {
-        if (Object.prototype.toString.call(ori[key]) !== "[object Object]" ) {
+        if (Object.prototype.toString.call(ori[key]) !== "[object Object]") {
             data.value.dialog.content.push([key, ori[key]]);
         }
     }
     data.value.dialog.visible = true;
+}
+
+function removeData() {
+    localStorage.setItem("score", JSON.stringify({}));
+    data.value.result = JSON.parse("{}");
+    ElMessage.success("本地数据已清空");
 }
 </script>
 
@@ -168,17 +177,26 @@ function handleDetail(index: number) {
             </el-form>
         </el-card>
         <el-card shadow="never">
-            <p>查询结果</p>
+            <el-space>
+                <el-text style="font-size: 1.1em">查询结果</el-text>
+                <el-button
+                    type="danger"
+                    text
+                    @click="removeData">
+                    清空本地数据
+                </el-button>
+            </el-space>
             <el-pagination
                 v-model:current-page="data.page"
                 v-model:page-size="data.result.pageSize"
                 background
+                style="margin-top: 1em"
                 layout="total, prev, pager, next, jumper"
                 :total="data.result.totalCount"
                 @size-change="queryScore"
                 @current-change="queryScore"
             />
-            <el-table :data="data.result.items" style="width: 100%">
+            <el-table :data="data.result.items" style="width: 100%;margin-top: 1em;">
                 <el-table-column width="100px">
                     <template #default="scope">
                         <el-button
@@ -202,8 +220,8 @@ function handleDetail(index: number) {
                 <el-table
                     :data="data.dialog.content"
                     style="width: 100%">
-                    <el-table-column prop="0" label="属性" />
-                    <el-table-column prop="1" label="值" />
+                    <el-table-column prop="0" label="属性"/>
+                    <el-table-column prop="1" label="值"/>
                 </el-table>
             </el-dialog>
         </el-card>
