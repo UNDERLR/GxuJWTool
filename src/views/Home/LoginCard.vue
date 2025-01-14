@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {cookie} from "@/ts/cookie";
 import {ipcRenderer} from "electron";
 import {ElMessage} from "element-plus";
 import {ref} from "vue";
@@ -19,10 +20,9 @@ function submit() {
     ElMessage.info("正在登录...");
     ipcRenderer.invoke("jwxt", "autoGetCookies", data.value.form.username, data.value.form.password)
         .then(res => {
-            console.log(res);
             if (res?.length >= 2 && Array.isArray(res)) {
-                res.forEach(cookie => {
-                    document.cookie = `${cookie.name}=${cookie.value};expires= Fri, 31 Dec 9999 23:59:59 GMT`;
+                res.forEach(item => {
+                    cookie.set(item.name, item.value);
                 });
                 ElMessage.success("获取成功");
             } else ElMessage.error(`获取失败，请重试。错误信息：${res}`);
@@ -31,15 +31,23 @@ function submit() {
 }
 
 function openLoginWindow() {
-    ipcRenderer.invoke("jwxt", "openLoginWindow");
+    ipcRenderer.invoke("jwxt", "openLoginWindow")
+        .then(res => {
+            if (res?.length >=2){
+                res.forEach(item => {
+                    cookie.set(item.name, item.value);
+                });
+                ElMessage.success("自动获取Cookie成功");
+            }
+        });
 }
 
 function getCookies() {
     ipcRenderer.invoke("jwxt", "getCookies")
         .then(res => {
             if (res?.length >=2){
-                res.forEach(cookie => {
-                    document.cookie = `${cookie.name}=${cookie.value};expires= Fri, 31 Dec 9999 23:59:59 GMT`;
+                res.forEach(item => {
+                    cookie.set(item.name, item.value);
                 });
                 ElMessage.success("获取成功");
             }else ElMessage.error("获取失败，请重试");
@@ -71,7 +79,7 @@ function getCookies() {
                 </el-form>
             </el-tab-pane>
             <el-tab-pane label="手动登录">
-                <p>在登录页进入教务系统主页后，点击“获取Cookies”按钮。</p>
+                <p>在登录页进入教务系统主页后，会尝试自动获取Cookie，如果未生效，请手动点击“获取Cookies”按钮。</p>
                 <p>重复登录会刷新Cookies。</p>
                 <el-space>
                     <el-button type="primary" @click="openLoginWindow">打开登录窗口</el-button>

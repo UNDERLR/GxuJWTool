@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import AutoLogin from "@/views/Home/AutoLogin.vue";
 import LoginCard from "@/views/Home/LoginCard.vue";
 
 </script>
