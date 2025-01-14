@@ -1,6 +1,6 @@
 {
-  "name": "gxu-jw-tool",
-  "version": "0.2.0",
+  "name": "gxu-jw-tool-beta",
+  "version": "0.2.1",
   "author": "HuanChen",
   "description": "广西大学教务系统工具",
   "private": true,
@@ -12,7 +12,7 @@
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "electron:generate-icons":"electron-icon-builder --input=./src/assets/icon.jpg --output=dist_electron --flatten"
+    "electron:generate-icons": "electron-icon-builder --input=./src/assets/icon.jpg --output=dist_electron --flatten"
   },
   "main": "background.js",
   "dependencies": {

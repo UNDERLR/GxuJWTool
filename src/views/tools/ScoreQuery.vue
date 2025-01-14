@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {cookie} from "@/ts/cookie";
 import {jwxt} from "@/ts/jwxt";
 import {ElMessage} from "element-plus";
 import {getCurrentInstance, ref} from "vue";
@@ -83,7 +84,7 @@ function queryScore() {
     };
     const headers = {
         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        "Cookie": document.cookie
+        "Cookie": cookie.getFormatted()
     };
     // 向Electron主进程发送请求
     console.log(formData);
@@ -95,7 +96,11 @@ function queryScore() {
                 ElMessage.success("查询成功");
             } else {
                 ElMessage.error("查询失败，尝试刷新重新获取Cookie...");
-                jwxt.refreshCookie();
+                jwxt.refreshCookie()
+                    .then(()=>{
+                        ElMessage.success("尝试重新查询...");
+                        queryScore();
+                    })
             }
             console.log(res);
         });
