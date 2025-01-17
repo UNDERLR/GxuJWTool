@@ -46,4 +46,4 @@ window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
 }
 
 //初始化主题
-// theme.initTheme();
+theme.initTheme();

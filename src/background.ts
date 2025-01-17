@@ -2,9 +2,7 @@
 
 import {Http} from "@/electron/http";
 import {jwxt} from "@/electron/jwxt";
-import {storage} from "@/electron/storage";
-import * as electron from "electron";
-import {app, protocol, BrowserWindow, session} from 'electron';
+import {app, protocol, BrowserWindow} from 'electron';
 import {createProtocol} from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, {VUEJS3_DEVTOOLS} from 'electron-devtools-installer';
 import {ipcMain} from 'electron';
@@ -58,12 +56,9 @@ async function createWindow() {
                 win.webContents.executeJavaScript("document.querySelector(\"#app > section > header > div > div.headerCenter > ul > li:nth-child(1)\").click()");
             })
     }
-    // 启动时获取route cookie
-    const routeCookie = await jwxt.getRouteCookie();
-    await win.webContents.executeJavaScript(`document.cookie="${routeCookie}; Expires=Expires=Thu, 01 Jan 9999 00:00:01 GMT;"`)
-
-    // 初始化Storage
-    storage.init();
+    // 启动时获取route cookie(已废弃，登录时会自动获取)
+    // const routeCookie = await jwxt.getRouteCookie();
+    // await win.webContents.executeJavaScript(`document.cookie="${routeCookie}; Expires=Expires=Thu, 01 Jan 9999 00:00:01 GMT;"`)
 
     ipcMain.handle("http",async (e, ...args)=>{
         return await Http(args);

@@ -6,6 +6,7 @@ export enum ThemeOption {
     primaryColor = "primaryColor",
     darkMode = "darkMode",
     appBackgroundColor = "appBackgroundColor",
+    fontFamily = "fontFamily",
 }
 
 function setThemeOption(option: ThemeOption, value: any) {
@@ -33,6 +34,8 @@ function setPrimaryColor(v: Color) {
         css.setVar("--el-color-primary-light" + index, value.rgbaString);
     }
 
+    css.setVar("--el-color-primary-dark-2", color.mix(v, baseColor,  0.6).rgbaString);
+
     const headerColor = color.mix(v, new Color("#ffffff"), 0.45);
     css.setVar("--header-color", headerColor.rgbaString);
 }
@@ -53,12 +56,21 @@ function setDarkMode(v: boolean ) {
     setPrimaryColor(new Color(getThemeOption(ThemeOption.primaryColor, "#409eff")))
 }
 
+function setFontFamily(v: string) {
+    css.setVar("--font-family", v);
+    css.setVar("--el-font-family", v);
+    setThemeOption(ThemeOption.fontFamily, v);
+}
+
 function initTheme() {
     const primaryColor = getThemeOption(ThemeOption.primaryColor, "#409eff");
     setPrimaryColor(new Color(primaryColor));
 
     const darkMode = getThemeOption("darkMode", window.matchMedia("(prefers-color-scheme: dark)").matches);
     setDarkMode(darkMode);
+
+    const defaultFontFamily = '"Helvetica Neue", Helvetica, Arial, sans-serif';
+    setFontFamily(getThemeOption(ThemeOption.fontFamily, defaultFontFamily));
 }
 
 export const theme = {
@@ -66,5 +78,6 @@ export const theme = {
     getThemeOption,
     setPrimaryColor,
     setDarkMode,
+    setFontFamily,
     initTheme
 };
