@@ -1,6 +1,6 @@
 {
   "name": "gxu-jw-tool",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "HuanChen",
   "description": "广西大学教务系统工具",
   "private": true,
@@ -20,6 +20,7 @@
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "core-js": "^3.8.3",
     "electron-icon-builder": "^2.0.1",
+    "electron-store": "^10.0.0",
     "element-plus": "^2.9.3",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",

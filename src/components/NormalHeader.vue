@@ -74,6 +74,11 @@ function closeHandler() {
 
 <style scoped lang="scss">
 @import "@/global";
+
+:root {
+    --header-color: mix($--color-primary , #fff, 45%);
+}
+
 .header {
     $headerHeight: 50px;
 
@@ -81,7 +86,7 @@ function closeHandler() {
     align-items: center;
     justify-content: center;
     position: relative;
-    background-color: mix($--color-primary , #fff, 45%);
+    background-color: var(--header-color);
     height: $headerHeight;
     user-select: none;
     -webkit-app-region: drag;

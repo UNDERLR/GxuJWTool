@@ -9,7 +9,7 @@ import ThemeSetting from "@/views/settings/ThemeSetting.vue";
         direction="vertical"
         style="width: 100%;"
         fill>
-        <!--<ThemeSetting/>-->
+        <ThemeSetting/>
         <DevelopSetting/>
     </el-space>
 </template>
