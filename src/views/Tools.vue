@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ComponentPublicInstance, getCurrentInstance, ref} from "vue";
+import { getCurrentInstance, ref} from "vue";
 
 const {proxy}: any = getCurrentInstance();
 const data = ref({
@@ -31,6 +31,12 @@ function menuHandler(key: string, keyPath: string[]) {
                     </el-icon>
                     <span>成绩查询</span>
                 </el-menu-item>
+                <el-menu-item index="classScheduleQuery">
+                    <el-icon>
+                        <Calendar/>
+                    </el-icon>
+                    <span>课表查询</span>
+                </el-menu-item>
             </el-menu>
         </el-aside>
         <el-main>
@@ -45,7 +51,7 @@ function menuHandler(key: string, keyPath: string[]) {
     user-select: none;
     .el-menu-item {
         .el-icon {
-            transform: scale(1.5) translateX(.2em);
+            transform: scale(1.5);
         }
 
         span {

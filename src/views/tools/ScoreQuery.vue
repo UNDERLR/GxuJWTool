@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import {cookie} from "@/ts/cookie";
 import {jwxt} from "@/ts/jwxt";
 import {ElMessage} from "element-plus";
-import {getCurrentInstance, ref} from "vue";
-import {BrowserWindow, ipcRenderer} from "electron";
+import {ref} from "vue";
+import {http} from "@/ts/http";
 
-const {proxy}: any = getCurrentInstance();
 const staticData = {
     year: [
         ["", "全部"],
@@ -62,17 +60,17 @@ const data = ref({
         content: [] as string[][],
     },
     form: {
-        year: staticData.year[5][0],
-        term: staticData.term[1][0],
-        tag: staticData.tag[0][0],
+        year: 5,
+        term: 1,
+        tag: 0,
     }
 });
 
 function queryScore() {
     const formData = {
-        xnm: data.value.form.year,
-        xqm: data.value.form.term,
-        kcbj: data.value.form.tag,
+        xnm: staticData.year[data.value.form.year],
+        xqm: staticData.term[data.value.form.term],
+        kcbj: staticData.tag[data.value.form.tag],
         _search: false,
         queryModel: {
             showCount: data.value.page.size,
@@ -82,13 +80,8 @@ function queryScore() {
         },
         time: 0,
     };
-    const headers = {
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        "Cookie": cookie.getFormatted()
-    };
-    // 向Electron主进程发送请求
-    console.log(formData);
-    ipcRenderer.invoke("http", "post", "https://jwxt2018.gxu.edu.cn/jwglxt/cjcx/cjcx_cxXsgrcj.html?doType=query", formData, headers)
+    // 通过Electron主进程发送请求
+    http.post("https://jwxt2018.gxu.edu.cn/jwglxt/cjcx/cjcx_cxXsgrcj.html?doType=query", formData)
         .then(res => {
             if (!res) return;
             if (typeof res === "object") {
@@ -136,10 +129,10 @@ function removeData() {
                         v-model="data.form.year"
                         filterable>
                         <el-option
-                            v-for="item in staticData.year"
-                            :key="item[0]"
+                            v-for="(item,index) in staticData.year"
+                            :key="index"
                             :label="item[1]"
-                            :value="item[0]"/>
+                            :value="index"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="学期">
@@ -147,10 +140,10 @@ function removeData() {
                         v-model="data.form.term"
                         filterable>
                         <el-option
-                            v-for="item in staticData.term"
-                            :key="item[0]"
+                            v-for="(item,index) in staticData.term"
+                            :key="index"
                             :label="item[1]"
-                            :value="item[0]"/>
+                            :value="index"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="课程标记">
@@ -158,10 +151,10 @@ function removeData() {
                         v-model="data.form.tag"
                         filterable>
                         <el-option
-                            v-for="item in staticData.tag"
-                            :key="item[0]"
+                            v-for="(item,index) in staticData.tag"
+                            :key="index"
                             :label="item[1]"
-                            :value="item[0]"/>
+                            :value="index"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="每页数量">

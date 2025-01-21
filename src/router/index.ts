@@ -24,6 +24,11 @@ const routes: Array<RouteRecordRaw> = [
                 name: 'scoreQuery',
                 component: defineAsyncComponent(() => import('@/views/tools/ScoreQuery.vue'))
             },
+            {
+                path: 'classScheduleQuery',
+                name: 'classScheduleQuery',
+                component: defineAsyncComponent(() => import('@/views/tools/ClassScheduleQuery.vue'))
+            },
         ]
     },
     {
