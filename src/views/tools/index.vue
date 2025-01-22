@@ -11,6 +11,11 @@ const toolList = [
         description: "查询个人成绩及详细信息",
         pathName: "scoreQuery"
     },
+    {
+        name: "课表查询",
+        description: "查询课程表",
+        pathName: "classScheduleQuery"
+    },
 ];
 
 function handleClick(pathName: string) {
@@ -19,6 +24,9 @@ function handleClick(pathName: string) {
 </script>
 
 <template>
+    <h1>工具列表</h1>
+    <p>以下是一些常用工具，在左边菜单获取更多功能</p>
+    <el-divider/>
     <el-space wrap :fill-ratio="70">
         <el-card
             shadow="hover"
