@@ -15,3 +15,6 @@ vue-cli-service electron:serve
 ```
 vue-cli-service electron:build
 ```
+### NEXT
+
+#### SOME RUBBISH
