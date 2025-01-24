@@ -161,12 +161,13 @@ function parseCourses() {
         [],
         [],
     ] as CourseItem[][];
-    data.value.result.kbList.forEach((course: CourseItem) => {
-        if (testCourseWeek(course)) {
-            data.value.classList[parseInt(course.xqj) - 1].push(course);
-        }
-    });
-    console.log(data.value.classList)
+    if (data.value.result.kbList) {
+        data.value.result.kbList.forEach((course: CourseItem) => {
+            if (testCourseWeek(course)) {
+                data.value.classList[parseInt(course.xqj) - 1].push(course);
+            }
+        });
+    }
 }
 
 parseCourses();
