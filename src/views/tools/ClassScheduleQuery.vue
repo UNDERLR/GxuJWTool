@@ -87,11 +87,9 @@ const data = ref({
         [],
     ] as CourseItem[][],
     dialog: {
-        visible:false,
-        detail: {
-            key: [] as string[],
-            value: [] as string[],
-        },
+        visible: false,
+        ori: {} as CourseItem,
+        detail: [] as { key: string, value: string }[],
     },
     week: {
         current: 1,
@@ -162,8 +160,8 @@ function parseCourses() {
         [],
         [],
         [],
-    ] as Course[][];
-    data.value.result.kbList.forEach((course: Course) => {
+    ] as CourseItem[][];
+    data.value.result.kbList.forEach((course: CourseItem) => {
         if (testCourseWeek(course)) {
             data.value.classList[parseInt(course.xqj) - 1].push(course);
         }
@@ -192,19 +190,42 @@ function testCourseWeek(course: CourseItem): boolean {
 function showDetail(course: CourseItem) {
     const details = {
         "课程名称": course.kcmc,
-        "课程代码": course.cdmc,
-        "课程类型": course.cdlbmc,
+        "场地": course.cdmc,
+        "学分": course.xf,
+        "周次": course.zcd,
+        "上课时间": course.xqjmc + course.jc,
+        "考查方式": course.khfsmc,
+        "QQ群": course.qqqh,
+        "课程类别": course.kclb,
+        "教师": course.xm,
+        "教学班组成": course.jxbzc,
     };
-    data.value.dialog.detail = {
-        key: Object.keys(details),
-        value: Object.values(details),
-    };
+    data.value.dialog.ori = course;
+    data.value.dialog.detail = [];
+    for (const key in details) {
+        data.value.dialog.detail.push({
+            key: key,
+            value: details[key]
+        });
+    }
+    console.log(data.value.dialog.detail)
+    data.value.dialog.visible = true;
 }
 
 function removeData() {
     localStorage.setItem("classSchedule", JSON.stringify({}));
     data.value.result = JSON.parse("{}");
     ElMessage.success("本地数据已清空");
+}
+
+function copy(text: string) {
+    const input = document.createElement("input");
+    input.value = text;
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand("copy");
+    document.body.removeChild(input);
+    ElMessage.success("已复制到剪贴板");
 }
 </script>
 
@@ -281,6 +302,7 @@ function removeData() {
                     <div
                         v-for="course in data.classList[index] as CourseItem[]"
                         :key="data.classList[index].indexOf(course)"
+                        @click="showDetail(course)"
                         :style="
                         `background-color:${course.backgroundColor};`+
                         `--span: ${parseInt(course.jcs.split('-')[1])-parseInt(course.jcs.split('-')[0])+1};`+
@@ -292,13 +314,31 @@ function removeData() {
             </el-row>
         </el-card>
 
-        <el-dialog v-model="data.dialog.visible" title="成绩详情">
+        <el-dialog v-model="data.dialog.visible" title="课程详情">
             <el-table
                 :data="data.dialog.detail"
                 style="width: 100%">
-                <el-table-column prop="0" label="属性"/>
-                <el-table-column prop="1" label="值"/>
+                <el-table-column prop="key" label="属性"/>
+                <el-table-column prop="value" label="值">
+                    <template #default="scope">
+                        <el-tooltip content="点击复制" placement="top">
+                            <div
+                                @click="copy(scope.row.value)"
+                                style="cursor: pointer;">
+                                {{ scope.row.value }}
+                            </div>
+                        </el-tooltip>
+                    </template>
+                </el-table-column>
             </el-table>
+            <template #footer>
+                <el-button @click="copy(JSON.stringify(data.dialog.ori))">
+                    复制原始数据
+                </el-button>
+                <el-button type="primary" @click="data.dialog.visible = false">
+                    关闭
+                </el-button>
+            </template>
         </el-dialog>
     </div>
 </template>
@@ -327,6 +367,7 @@ function removeData() {
         width: 90%;
         border: 1px solid var(--el-border-color);
         box-sizing: border-box;
+        border-radius: 5px;
         margin-top: $marginTop;
         overflow: hidden;
     }

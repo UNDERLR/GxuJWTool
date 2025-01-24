@@ -56,6 +56,7 @@ const data = ref({
         size: 15,
     },
     dialog: {
+        ori: {} as any,
         visible: false,
         content: [] as string[][],
     },
@@ -108,6 +109,7 @@ function query() {
 
 function showDetail(index: number) {
     data.value.dialog.content = [];
+    data.value.dialog.ori = data.value.result.items[index];
     let ori = data.value.result.items[index];
     for (const key in ori) {
         if (Object.prototype.toString.call(ori[key]) !== "[object Object]") {
@@ -121,6 +123,16 @@ function removeData() {
     localStorage.setItem("score", JSON.stringify({}));
     data.value.result = JSON.parse("{}");
     ElMessage.success("本地数据已清空");
+}
+
+function copy(text: string) {
+    const input = document.createElement("input");
+    input.value = text;
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand("copy");
+    document.body.removeChild(input);
+    ElMessage.success("已复制到剪贴板");
 }
 </script>
 
@@ -218,8 +230,26 @@ function removeData() {
                     :data="data.dialog.content"
                     style="width: 100%">
                     <el-table-column prop="0" label="属性"/>
-                    <el-table-column prop="1" label="值"/>
+                    <el-table-column prop="1" label="值">
+                    <template #default="scope">
+                        <el-tooltip content="点击复制" placement="top">
+                            <div
+                                @click="copy(scope.row[1])"
+                                style="cursor: pointer;">
+                                {{ scope.row[1] }}
+                            </div>
+                        </el-tooltip>
+                    </template>
+                </el-table-column>
                 </el-table>
+                <template #footer>
+                    <el-button @click="copy(JSON.stringify(data.dialog.ori))">
+                        复制原始数据
+                    </el-button>
+                    <el-button type="primary" @click="data.dialog.visible = false">
+                        关闭
+                    </el-button>
+                </template>
             </el-dialog>
         </el-card>
     </div>
