@@ -6,7 +6,6 @@ function getCookie(name: string) {
 function setCookie(name: string, value: any) {
     const cookies = JSON.parse(localStorage.getItem("cookies") || "{}");
     cookies[name] = value;
-    console.log(cookies);
     localStorage.setItem("cookies", JSON.stringify(cookies));
 }
 

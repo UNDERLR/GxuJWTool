@@ -26,6 +26,7 @@ import NormalHeader from "@/components/NormalHeader.vue";
     }
 
     .el-main {
+        color: var(--el-text-color-primary);
         flex: 1;
         overflow: scroll;
         box-sizing: border-box;

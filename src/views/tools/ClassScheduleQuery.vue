@@ -4,6 +4,7 @@ import {http} from "@/ts/http";
 import {ElMessage} from "element-plus";
 import {jwxt} from "@/ts/jwxt";
 import {Course} from "@/ts/type/course";
+import {BaseColor, Color} from "@/ts/color";
 
 const staticData = {
     year: [
@@ -46,7 +47,33 @@ const staticData = {
         "星期六",
         "星期日",
     ],
+    randomColor: [
+        new Color(BaseColor.pink),
+        new Color(BaseColor.lightgreen),
+        new Color(BaseColor.skyblue),
+        new Color(BaseColor.orange),
+        new Color(BaseColor.tan),
+        new Color(BaseColor.sandybrown),
+        new Color(BaseColor.navy),
+        new Color(BaseColor.maroon),
+        new Color(BaseColor.mediumspringgreen),
+        new Color(BaseColor.slateblue),
+        new Color(BaseColor.yellowgreen),
+        new Color(BaseColor.red),
+        new Color(BaseColor.yellow),
+        new Color(BaseColor.gold),
+        new Color(BaseColor.lightskyblue),
+        new Color(BaseColor.lightsteelblue),
+        new Color(BaseColor.limegreen),
+        new Color(BaseColor.mediumaquamarine),
+        new Color(BaseColor.mediumblue),
+    ]
 };
+
+interface CourseItem extends Course {
+    // 在课程表中显示的背景颜色
+    backgroundColor: string;
+}
 
 const data = ref({
     result: JSON.parse(localStorage.getItem("classSchedule") || "{}"),
@@ -58,8 +85,11 @@ const data = ref({
         [],
         [],
         [],
-    ] as Course[][],
-    maxWeek:1,
+    ] as CourseItem[][],
+    week: {
+        current: 1,
+        total: 20,
+    },
     form: {
         year: 4,
         term: 0,
@@ -84,9 +114,11 @@ function query() {
                 return;
             }
             if (typeof res === "object") {
+                randomCourseColor(res.kbList);
                 data.value.result = res;
                 localStorage.setItem("classSchedule", JSON.stringify(res));
                 ElMessage.success("查询成功");
+                parseCourses();
             } else {
                 ElMessage.error("查询失败，尝试重新获取Cookie...");
                 jwxt.refreshCookie()
@@ -101,14 +133,54 @@ function query() {
         });
 }
 
+function randomCourseColor(courseList: CourseItem[]) {
+    //使得相同课程的颜色相同
+    const courseColor = {};
+    courseList.forEach((course:CourseItem) => {
+        if (!courseColor[course.kcmc]) {
+            let randomNum = Math.floor(Math.random() * staticData.randomColor.length);
+            course.backgroundColor =
+                courseColor[course.kcmc] =
+                    staticData.randomColor[randomNum].setAlpha(0.3).rgbaString;
+        }else course.backgroundColor = courseColor[course.kcmc];
+    });
+}
+
 function parseCourses() {
+    data.value.classList = [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+    ] as Course[][];
     data.value.result.kbList.forEach((course: Course) => {
-        data.value.classList[parseInt(course.xqj) - 1].push(course);
+        if (testCourseWeek(course)) {
+            data.value.classList[parseInt(course.xqj) - 1].push(course);
+        }
     });
     console.log(data.value.classList)
 }
 
 parseCourses();
+
+function testCourseWeek(course: Course): boolean {
+    const weekSpans = course.zcd.split(",");
+    let res = false;
+    weekSpans.forEach(weekSpan => {
+        const weeks = weekSpan.replace("周", "")
+            .split("-")
+            .map(week => parseInt(week));
+        if (weeks.length === 1 && weeks[0] === data.value.week.current ||
+            weeks[0] <= data.value.week.current && data.value.week.current <= weeks[1]) {
+            res = true;
+            return;
+        }
+    });
+    return res;
+}
 </script>
 
 <template>
@@ -143,6 +215,17 @@ parseCourses();
             </el-form>
         </el-card>
         <el-card shadow="never">
+            <div style="display: flex;">
+                <el-text style="word-break: keep-all;margin-right: 1em;">当前周数：</el-text>
+                <el-slider
+                    step="1"
+                    v-model="data.week.current"
+                    :min="1"
+                    :max="data.week.total"
+                    @input="parseCourses"
+                    show-input/>
+            </div>
+            <el-divider/>
             <el-row style="text-align: center;" :gutter="5">
                 <el-col
                     :span="3"
@@ -153,23 +236,23 @@ parseCourses();
                         class="course"
                         :style="`--span:1;--dy:${time-1};`"
                     >
-                        <p>{{ time }}</p>
+                        <el-text>{{ time }}</el-text>
                     </div>
                 </el-col>
                 <el-col
                     :span="3"
-                    :key="data.classList[index].length"
                     class="day"
                     v-for="(day,index) in staticData.days">
                     <div>{{ day }}</div>
                     <div
-                        v-for="course in data.classList[index] as Course[]"
+                        v-for="course in data.classList[index] as CourseItem[]"
                         :key="data.classList[index].indexOf(course)"
                         :style="
+                        `background-color:${course.backgroundColor};`+
                         `--span: ${parseInt(course.jcs.split('-')[1])-parseInt(course.jcs.split('-')[0])+1};`+
                         `--dy:${parseInt(course.jcs.split('-')[0])-1};`"
                         class="course">
-                        <p>{{ course.kcmc }}</p>
+                        <el-text>{{ course.kcmc }}</el-text>
                     </div>
                 </el-col>
             </el-row>
@@ -183,7 +266,7 @@ parseCourses();
 }
 
 .day {
-    $spanHeight: 3em;
+    $spanHeight: 4em;
     $marginTop: 10px;
     $weekTextHeight: 2em;
 
@@ -203,11 +286,6 @@ parseCourses();
         box-sizing: border-box;
         margin-top: $marginTop;
         overflow: hidden;
-        transition: 0.3s ease-in-out;
-    }
-
-    .course:hover {
-        height: fit-content;
     }
 
     &:not(:first-child) .course {

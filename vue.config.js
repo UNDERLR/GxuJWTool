@@ -1,6 +1,12 @@
 const {defineConfig} = require('@vue/cli-service');
 module.exports = defineConfig({
     transpileDependencies: true,
+    chainWebpack: (config) => {
+        config.plugin('html').tap((args) => {
+            args[0].title = "广西大学教务系统工具";
+            return args;
+        });
+    },
     pluginOptions: {
         electronBuilder: {
             builderOptions: {
