@@ -7,7 +7,7 @@ import ThemeSetting from "@/views/settings/ThemeSetting.vue";
 <template>
     <el-space
         direction="vertical"
-        style="width: 100%;"
+        style="width: 100%;padding: var(--el-main-padding);box-sizing: border-box;"
         fill>
         <ThemeSetting/>
         <DevelopSetting/>

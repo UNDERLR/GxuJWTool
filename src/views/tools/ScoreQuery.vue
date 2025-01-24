@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import {cookie} from "@/ts/cookie";
 import {jwxt} from "@/ts/jwxt";
 import {ElMessage} from "element-plus";
-import {getCurrentInstance, ref} from "vue";
-import {BrowserWindow, ipcRenderer} from "electron";
+import {ref} from "vue";
+import {http} from "@/ts/http";
 
-const {proxy}: any = getCurrentInstance();
 const staticData = {
     year: [
         ["", "全部"],
@@ -58,21 +56,22 @@ const data = ref({
         size: 15,
     },
     dialog: {
+        ori: {} as any,
         visible: false,
         content: [] as string[][],
     },
     form: {
-        year: staticData.year[5][0],
-        term: staticData.term[1][0],
-        tag: staticData.tag[0][0],
+        year: 5,
+        term: 1,
+        tag: 0,
     }
 });
 
-function queryScore() {
+function query() {
     const formData = {
-        xnm: data.value.form.year,
-        xqm: data.value.form.term,
-        kcbj: data.value.form.tag,
+        xnm: staticData.year[data.value.form.year][0],
+        xqm: staticData.term[data.value.form.term][0],
+        kcbj: staticData.tag[data.value.form.tag][0],
         _search: false,
         queryModel: {
             showCount: data.value.page.size,
@@ -82,15 +81,14 @@ function queryScore() {
         },
         time: 0,
     };
-    const headers = {
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        "Cookie": cookie.getFormatted()
-    };
-    // 向Electron主进程发送请求
-    console.log(formData);
-    ipcRenderer.invoke("http", "post", "https://jwxt2018.gxu.edu.cn/jwglxt/cjcx/cjcx_cxXsgrcj.html?doType=query", formData, headers)
+    ElMessage.info("正在查询...");
+    // 通过Electron主进程发送请求
+    http.post("https://jwxt2018.gxu.edu.cn/jwglxt/cjcx/cjcx_cxXsgrcj.html?doType=query", http.objectToFormUrlEncoded(formData))
         .then(res => {
-            if (!res) return;
+            if (!res) {
+                ElMessage.error("查询失败，请联系管理员");
+                return;
+            }
             if (typeof res === "object") {
                 data.value.result = res;
                 localStorage.setItem("score", JSON.stringify(res));
@@ -101,7 +99,7 @@ function queryScore() {
                     .then(res => {
                         if (Array.isArray(res) && res.length >= 2) {
                             ElMessage.success("尝试重新查询...");
-                            queryScore();
+                            query();
                         }
                     });
             }
@@ -109,8 +107,9 @@ function queryScore() {
         });
 }
 
-function handleDetail(index: number) {
+function showDetail(index: number) {
     data.value.dialog.content = [];
+    data.value.dialog.ori = data.value.result.items[index];
     let ori = data.value.result.items[index];
     for (const key in ori) {
         if (Object.prototype.toString.call(ori[key]) !== "[object Object]") {
@@ -125,6 +124,16 @@ function removeData() {
     data.value.result = JSON.parse("{}");
     ElMessage.success("本地数据已清空");
 }
+
+function copy(text: string) {
+    const input = document.createElement("input");
+    input.value = text;
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand("copy");
+    document.body.removeChild(input);
+    ElMessage.success("已复制到剪贴板");
+}
 </script>
 
 <template>
@@ -136,10 +145,10 @@ function removeData() {
                         v-model="data.form.year"
                         filterable>
                         <el-option
-                            v-for="item in staticData.year"
-                            :key="item[0]"
+                            v-for="(item,index) in staticData.year"
+                            :key="index"
                             :label="item[1]"
-                            :value="item[0]"/>
+                            :value="index"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="学期">
@@ -147,10 +156,10 @@ function removeData() {
                         v-model="data.form.term"
                         filterable>
                         <el-option
-                            v-for="item in staticData.term"
-                            :key="item[0]"
+                            v-for="(item,index) in staticData.term"
+                            :key="index"
                             :label="item[1]"
-                            :value="item[0]"/>
+                            :value="index"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="课程标记">
@@ -158,10 +167,10 @@ function removeData() {
                         v-model="data.form.tag"
                         filterable>
                         <el-option
-                            v-for="item in staticData.tag"
-                            :key="item[0]"
+                            v-for="(item,index) in staticData.tag"
+                            :key="index"
                             :label="item[1]"
-                            :value="item[0]"/>
+                            :value="index"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="每页数量">
@@ -172,7 +181,7 @@ function removeData() {
                     </el-input-number>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="queryScore">查询</el-button>
+                    <el-button type="primary" @click="query">查询</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -193,8 +202,8 @@ function removeData() {
                 style="margin-top: 1em"
                 layout="total, prev, pager, next, jumper"
                 :total="data.result.totalCount"
-                @size-change="queryScore"
-                @current-change="queryScore"
+                @size-change="query"
+                @current-change="query"
             />
             <el-table :data="data.result.items" style="width: 100%;margin-top: 1em;">
                 <el-table-column width="100px">
@@ -202,7 +211,7 @@ function removeData() {
                         <el-button
                             text
                             type="primary"
-                            @click="handleDetail(scope.$index)">详情
+                            @click="showDetail(scope.$index)">详情
                         </el-button>
                     </template>
                 </el-table-column>
@@ -221,8 +230,26 @@ function removeData() {
                     :data="data.dialog.content"
                     style="width: 100%">
                     <el-table-column prop="0" label="属性"/>
-                    <el-table-column prop="1" label="值"/>
+                    <el-table-column prop="1" label="值">
+                    <template #default="scope">
+                        <el-tooltip content="点击复制" placement="top">
+                            <div
+                                @click="copy(scope.row[1])"
+                                style="cursor: pointer;">
+                                {{ scope.row[1] }}
+                            </div>
+                        </el-tooltip>
+                    </template>
+                </el-table-column>
                 </el-table>
+                <template #footer>
+                    <el-button @click="copy(JSON.stringify(data.dialog.ori))">
+                        复制原始数据
+                    </el-button>
+                    <el-button type="primary" @click="data.dialog.visible = false">
+                        关闭
+                    </el-button>
+                </template>
             </el-dialog>
         </el-card>
     </div>
