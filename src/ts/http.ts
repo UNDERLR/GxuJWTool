@@ -7,8 +7,16 @@ const defaultHeaders = {
     "Cookie": cookie.getFormatted()
 };
 
-function objectToFormUrlEncoded(obj: any) {
-    return Object.keys(obj).map(key => `${key}=${encodeURIComponent(obj[key])}`).join("&");
+
+function objectToFormUrlEncoded(obj: any, prefix = ""): string {
+    let res = "";
+    for (const key in obj) {
+        if (typeof obj[key] === "object") {
+            res += objectToFormUrlEncoded(obj[key], prefix + key + ".");
+        } else res += prefix + key + "=" + encodeURIComponent(obj[key]) + "&";
+    }
+    if (!prefix) res = res.slice(0, -1);
+    return res;
 }
 
 function post(url: string, data: any = {}, headers: any = defaultHeaders) {

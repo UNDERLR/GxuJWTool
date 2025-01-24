@@ -66,7 +66,7 @@ const data = ref({
     }
 });
 
-function queryScore() {
+function query() {
     const formData = {
         xnm: staticData.year[data.value.form.year][0],
         xqm: staticData.term[data.value.form.term][0],
@@ -80,9 +80,9 @@ function queryScore() {
         },
         time: 0,
     };
-    console.log(formData)
+    ElMessage.info("正在查询...");
     // 通过Electron主进程发送请求
-    http.post("https://jwxt2018.gxu.edu.cn/jwglxt/cjcx/cjcx_cxXsgrcj.html?doType=query", formData)
+    http.post("https://jwxt2018.gxu.edu.cn/jwglxt/cjcx/cjcx_cxXsgrcj.html?doType=query", http.objectToFormUrlEncoded(formData))
         .then(res => {
             if (!res) {
                 ElMessage.error("查询失败，请联系管理员");
@@ -98,7 +98,7 @@ function queryScore() {
                     .then(res => {
                         if (Array.isArray(res) && res.length >= 2) {
                             ElMessage.success("尝试重新查询...");
-                            queryScore();
+                            query();
                         }
                     });
             }
@@ -106,7 +106,7 @@ function queryScore() {
         });
 }
 
-function handleDetail(index: number) {
+function showDetail(index: number) {
     data.value.dialog.content = [];
     let ori = data.value.result.items[index];
     for (const key in ori) {
@@ -169,7 +169,7 @@ function removeData() {
                     </el-input-number>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="queryScore">查询</el-button>
+                    <el-button type="primary" @click="query">查询</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -190,8 +190,8 @@ function removeData() {
                 style="margin-top: 1em"
                 layout="total, prev, pager, next, jumper"
                 :total="data.result.totalCount"
-                @size-change="queryScore"
-                @current-change="queryScore"
+                @size-change="query"
+                @current-change="query"
             />
             <el-table :data="data.result.items" style="width: 100%;margin-top: 1em;">
                 <el-table-column width="100px">
@@ -199,7 +199,7 @@ function removeData() {
                         <el-button
                             text
                             type="primary"
-                            @click="handleDetail(scope.$index)">详情
+                            @click="showDetail(scope.$index)">详情
                         </el-button>
                     </template>
                 </el-table-column>

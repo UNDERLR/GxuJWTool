@@ -86,6 +86,13 @@ const data = ref({
         [],
         [],
     ] as CourseItem[][],
+    dialog: {
+        visible:false,
+        detail: {
+            key: [] as string[],
+            value: [] as string[],
+        },
+    },
     week: {
         current: 1,
         total: 20,
@@ -136,13 +143,13 @@ function query() {
 function randomCourseColor(courseList: CourseItem[]) {
     //使得相同课程的颜色相同
     const courseColor = {};
-    courseList.forEach((course:CourseItem) => {
+    courseList.forEach((course: CourseItem) => {
         if (!courseColor[course.kcmc]) {
             let randomNum = Math.floor(Math.random() * staticData.randomColor.length);
             course.backgroundColor =
                 courseColor[course.kcmc] =
                     staticData.randomColor[randomNum].setAlpha(0.3).rgbaString;
-        }else course.backgroundColor = courseColor[course.kcmc];
+        } else course.backgroundColor = courseColor[course.kcmc];
     });
 }
 
@@ -166,7 +173,7 @@ function parseCourses() {
 
 parseCourses();
 
-function testCourseWeek(course: Course): boolean {
+function testCourseWeek(course: CourseItem): boolean {
     const weekSpans = course.zcd.split(",");
     let res = false;
     weekSpans.forEach(weekSpan => {
@@ -180,6 +187,24 @@ function testCourseWeek(course: Course): boolean {
         }
     });
     return res;
+}
+
+function showDetail(course: CourseItem) {
+    const details = {
+        "课程名称": course.kcmc,
+        "课程代码": course.cdmc,
+        "课程类型": course.cdlbmc,
+    };
+    data.value.dialog.detail = {
+        key: Object.keys(details),
+        value: Object.values(details),
+    };
+}
+
+function removeData() {
+    localStorage.setItem("classSchedule", JSON.stringify({}));
+    data.value.result = JSON.parse("{}");
+    ElMessage.success("本地数据已清空");
 }
 </script>
 
@@ -215,6 +240,15 @@ function testCourseWeek(course: Course): boolean {
             </el-form>
         </el-card>
         <el-card shadow="never">
+            <el-space>
+                <el-text style="font-size: 1.1em">查询结果</el-text>
+                <el-button
+                    type="danger"
+                    text
+                    @click="removeData">
+                    清空本地数据
+                </el-button>
+            </el-space>
             <div style="display: flex;">
                 <el-text style="word-break: keep-all;margin-right: 1em;">当前周数：</el-text>
                 <el-slider
@@ -257,6 +291,15 @@ function testCourseWeek(course: Course): boolean {
                 </el-col>
             </el-row>
         </el-card>
+
+        <el-dialog v-model="data.dialog.visible" title="成绩详情">
+            <el-table
+                :data="data.dialog.detail"
+                style="width: 100%">
+                <el-table-column prop="0" label="属性"/>
+                <el-table-column prop="1" label="值"/>
+            </el-table>
+        </el-dialog>
     </div>
 </template>
 
