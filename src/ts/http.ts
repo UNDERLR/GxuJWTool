@@ -7,10 +7,15 @@ const defaultHeaders = {
     "Cookie": cookie.getFormatted()
 };
 
+function objectToFormUrlEncoded(obj: any) {
+    return Object.keys(obj).map(key => `${key}=${encodeURIComponent(obj[key])}`).join("&");
+}
+
 function post(url: string, data: any = {}, headers: any = defaultHeaders) {
     return ipcRenderer.invoke(channel, "post", url, data, headers);
 }
 
 export const http = {
-    post: post
+    post,
+    objectToFormUrlEncoded
 };

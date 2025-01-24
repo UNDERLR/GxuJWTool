@@ -1,4 +1,4 @@
-interface IUnknown {
+export interface Score {
 	//日期
 	date: string;
 	//日期数字格式
@@ -37,7 +37,7 @@ interface IUnknown {
 	"pjmbmcb_id": string;
 	//评价状态
 	pjzt: string;
-	queryModel: IQueryModel;
+	queryModel: QueryModel;
 	//？
 	rangeable: boolean;
 	//列ID
@@ -53,7 +53,7 @@ interface IUnknown {
 	//总结果
 	totalResult: string;
 	//？
-	userModel: IUserModel;
+	userModel: UserModel;
 	//学年名
 	xnm: string;
 	//学期名
@@ -71,7 +71,7 @@ interface IUnknown {
 
 /* 自动生成的 Interface */
 
-interface IUserModel {
+export interface UserModel {
 	monitor: boolean;
 	roleCount: number;
 	roleKeys: string;
@@ -81,7 +81,7 @@ interface IUserModel {
 }
 
 
-interface IQueryModel {
+export interface QueryModel {
 	currentPage: number;
 	currentResult: number;
 	entityOrField: boolean;
@@ -90,7 +90,7 @@ interface IQueryModel {
 	pageNo: number;
 	pageSize: number;
 	showCount: number;
-	sorts: void /* undefined */[];
+	sorts: Score[];
 	totalCount: number;
 	totalPage: number;
 	totalResult: number;

@@ -1,4 +1,4 @@
-interface IUnknown {
+export interface Course {
 	//？
 	bklxdjmc: string;
     //场地ID
@@ -13,11 +13,11 @@ interface IUnknown {
 	cxbj: string;
 	//重修班级名称
 	cxbjmc: string;
-	//日期
+	//中文查询日期
 	date: string;
-	//日期-数字
+	//数字查询日期
 	dateDigit: string;
-	//日期-数字-分开
+	//分隔符数字查询日期
 	dateDigitSeparator: string;
 	//（年月）日
 	day: string;

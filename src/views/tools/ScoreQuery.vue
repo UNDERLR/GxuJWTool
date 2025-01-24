@@ -68,9 +68,9 @@ const data = ref({
 
 function queryScore() {
     const formData = {
-        xnm: staticData.year[data.value.form.year],
-        xqm: staticData.term[data.value.form.term],
-        kcbj: staticData.tag[data.value.form.tag],
+        xnm: staticData.year[data.value.form.year][0],
+        xqm: staticData.term[data.value.form.term][0],
+        kcbj: staticData.tag[data.value.form.tag][0],
         _search: false,
         queryModel: {
             showCount: data.value.page.size,
@@ -80,10 +80,14 @@ function queryScore() {
         },
         time: 0,
     };
+    console.log(formData)
     // 通过Electron主进程发送请求
     http.post("https://jwxt2018.gxu.edu.cn/jwglxt/cjcx/cjcx_cxXsgrcj.html?doType=query", formData)
         .then(res => {
-            if (!res) return;
+            if (!res) {
+                ElMessage.error("查询失败，请联系管理员");
+                return;
+            }
             if (typeof res === "object") {
                 data.value.result = res;
                 localStorage.setItem("score", JSON.stringify(res));
