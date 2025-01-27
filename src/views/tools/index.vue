@@ -2,7 +2,7 @@
 
 import {getCurrentInstance} from "vue";
 
-const {proxy} : any = getCurrentInstance();
+const {proxy}: any = getCurrentInstance();
 const router = proxy.$router;
 
 const toolList = [
@@ -19,7 +19,7 @@ const toolList = [
 ];
 
 function handleClick(pathName: string) {
-    router.push({ name: pathName });
+    router.push({name: pathName});
 }
 </script>
 
@@ -40,6 +40,7 @@ function handleClick(pathName: string) {
 </template>
 
 <style scoped lang="scss">
+
 .toolCard {
     width: 15em;
 }

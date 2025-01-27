@@ -13,7 +13,7 @@ function refreshCookie(){
         ElMessage.info("正在重新获取Cookie...");
         ipcRenderer.invoke("jwxt", "autoGetCookies", logData.username, logData.password)
             .then(res => {
-                if (res?.length >= 2) {
+                if (Array.isArray(res) && res?.length >= 2) {
                     res.forEach(item => {
                          cookie.set(item.name, item.value);
                     });

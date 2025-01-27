@@ -6,6 +6,7 @@ import {app, protocol, BrowserWindow} from 'electron';
 import {createProtocol} from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, {VUEJS3_DEVTOOLS} from 'electron-devtools-installer';
 import {ipcMain} from 'electron';
+
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 // Scheme must be registered before the app is ready
@@ -22,6 +23,7 @@ async function createWindow() {
         minHeight: 600,
         frame: false,
         icon: "./src/assets/icon.jpg",
+        title: "广西大学教务系统工具",
         webPreferences: {
 
             // Use pluginOptions.nodeIntegration, leave this alone
@@ -52,7 +54,7 @@ async function createWindow() {
         // Load the index.html when not in development
         // 通过点击首页按钮初始化首页
         win.loadURL('app://./index.html')
-            .then(()=>{
+            .then(() => {
                 win.webContents.executeJavaScript("document.querySelector(\"#app > section > header > div > div.headerCenter > ul > li:nth-child(1)\").click()");
             })
     }
@@ -60,18 +62,18 @@ async function createWindow() {
     // const routeCookie = await jwxt.getRouteCookie();
     // await win.webContents.executeJavaScript(`document.cookie="${routeCookie}; Expires=Expires=Thu, 01 Jan 9999 00:00:01 GMT;"`)
 
-    ipcMain.handle("http",async (e, ...args)=>{
+    ipcMain.handle("http", async (e, ...args) => {
         return await Http(args);
     })
-    ipcMain.handle("jwxt",async (e, ...args)=>{
+    ipcMain.handle("jwxt", async (e, ...args) => {
         return await jwxt.ipcHandler(args);
     })
 //接收最小化命令
-    ipcMain.on('window-min', function() {
+    ipcMain.on('window-min', function () {
         win.minimize();
     })
 //接收最大化命令
-    ipcMain.on('window-max', function() {
+    ipcMain.on('window-max', function () {
         if (win.isMaximized()) {
             win.restore();
         } else {
@@ -79,7 +81,7 @@ async function createWindow() {
         }
     })
 //接收关闭命令
-    ipcMain.on('window-close', function() {
+    ipcMain.on('window-close', function () {
         win.destroy();
     })
 
