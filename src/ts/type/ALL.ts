@@ -229,14 +229,13 @@ export interface XsbjList {
 	xsdm: string;
 }
 
-export interface RootObject {
+export interface ResRoot {
 	qsxqj: string;
 	xsxx: Xsxx;
 	sjkList: SjkList[];
 	xqjmcMap: XqjmcMap;
 	xskbsfxstkzt: string;
 	rqazcList: any[];
-	kbList: KbList[];
 	xsbjList: XsbjList[];
 	zckbsfxssj: string;
 	djdzList: any[];
