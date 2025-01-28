@@ -67,7 +67,7 @@ const data = ref({
     }
 });
 
-function query() {
+function query(retry = true) {
     const formData = {
         xnm: staticData.year[data.value.form.year][0],
         xqm: staticData.term[data.value.form.term][0],
@@ -93,15 +93,17 @@ function query() {
                 data.value.result = res;
                 localStorage.setItem("score", JSON.stringify(res));
                 ElMessage.success("查询成功");
-            } else {
+            } else if (retry) {
                 ElMessage.error("查询失败，尝试重新获取Cookie...");
                 jwxt.refreshCookie()
                     .then(res => {
                         if (Array.isArray(res) && res.length >= 2) {
                             ElMessage.success("尝试重新查询...");
-                            query();
+                            query(false);
                         }
                     });
+            } else {
+                ElMessage.error("查询失败，请尝试手动登录或稍后再进行查询，请联系管理员");
             }
             console.log(res);
         });
@@ -226,21 +228,20 @@ function copy(text: string) {
             </el-table>
 
             <el-dialog v-model="data.dialog.visible" title="成绩详情">
+                <el-text>点击数据复制到剪贴板</el-text>
                 <el-table
                     :data="data.dialog.content"
                     style="width: 100%">
                     <el-table-column prop="0" label="属性"/>
                     <el-table-column prop="1" label="值">
-                    <template #default="scope">
-                        <el-tooltip content="点击复制" placement="top">
+                        <template #default="scope">
                             <div
                                 @click="copy(scope.row[1])"
                                 style="cursor: pointer;">
                                 {{ scope.row[1] }}
                             </div>
-                        </el-tooltip>
-                    </template>
-                </el-table-column>
+                        </template>
+                    </el-table-column>
                 </el-table>
                 <template #footer>
                     <el-button @click="copy(JSON.stringify(data.dialog.ori))">

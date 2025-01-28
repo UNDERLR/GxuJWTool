@@ -102,7 +102,7 @@ const data = ref({
     }
 });
 
-function query() {
+function query(retry = true) {
     const formData = {
         xnm: staticData.year[data.value.form.year][0],
         xqm: staticData.term[data.value.form.term][0],
@@ -124,7 +124,7 @@ function query() {
                 localStorage.setItem("classSchedule", JSON.stringify(res));
                 ElMessage.success("查询成功");
                 parseCourses();
-            } else {
+            } else if (retry) {
                 ElMessage.error("查询失败，尝试重新获取Cookie...");
                 jwxt.refreshCookie()
                     .then(res => {
@@ -133,6 +133,8 @@ function query() {
                             query();
                         }
                     });
+            } else {
+                ElMessage.error("查询失败，请尝试手动登录或稍后再进行查询，请联系管理员");
             }
             console.log(res);
         });
@@ -316,19 +318,18 @@ function copy(text: string) {
         </el-card>
 
         <el-dialog v-model="data.dialog.visible" title="课程详情">
+            <el-text>点击数据复制到剪贴板</el-text>
             <el-table
                 :data="data.dialog.detail"
                 style="width: 100%">
                 <el-table-column prop="key" label="属性"/>
                 <el-table-column prop="value" label="值">
                     <template #default="scope">
-                        <el-tooltip content="点击复制" placement="top">
-                            <div
-                                @click="copy(scope.row.value)"
-                                style="cursor: pointer;">
-                                {{ scope.row.value }}
-                            </div>
-                        </el-tooltip>
+                        <div
+                            @click="copy(scope.row.value)"
+                            style="cursor: pointer;">
+                            {{ scope.row.value }}
+                        </div>
                     </template>
                 </el-table-column>
             </el-table>
