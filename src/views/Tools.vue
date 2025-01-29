@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { getCurrentInstance, ref} from "vue";
+import {getCurrentInstance, ref} from "vue";
+import {Document} from "@element-plus/icons-vue";
 
 const {proxy}: any = getCurrentInstance();
 const data = ref({
@@ -36,6 +37,12 @@ function menuHandler(key: string, keyPath: string[]) {
                         <Calendar/>
                     </el-icon>
                     <span>课表查询</span>
+                </el-menu-item>
+                <el-menu-item index="examInfoQuery">
+                    <el-icon>
+                        <Document/>
+                    </el-icon>
+                    <span>考试信息查询</span>
                 </el-menu-item>
             </el-menu>
         </el-aside>
