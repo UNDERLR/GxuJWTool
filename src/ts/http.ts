@@ -2,10 +2,13 @@ import {cookie} from "@/ts/cookie";
 import {ipcRenderer} from "electron";
 
 const channel = "http";
-const defaultHeaders = {
-    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-    "Cookie": cookie.getFormatted()
-};
+
+function generateDefaultHeaders() {
+    return {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        "Cookie": cookie.getFormatted()
+    };
+}
 
 
 function objectToFormUrlEncoded(obj: any, prefix = ""): string {
@@ -19,7 +22,7 @@ function objectToFormUrlEncoded(obj: any, prefix = ""): string {
     return res;
 }
 
-function post(url: string, data: any = {}, headers: any = defaultHeaders) {
+function post(url: string, data: any = {}, headers: any = generateDefaultHeaders()) {
     return ipcRenderer.invoke(channel, "post", url, data, headers);
 }
 

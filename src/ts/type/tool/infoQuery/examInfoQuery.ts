@@ -73,6 +73,22 @@ export interface ExamInfo {
     jxdd: string;
 }
 
+// 考试名称数据接口
+export interface ExamName {
+    //
+    KSXS: string;
+    //
+    PKSJSFYXYXSSKCT: string;
+    // 可能是考试ID，用在查询详情的请求参数
+    KSMCDMB_ID: string;
+    // 考试名称
+    KSMC: string;
+    //
+    SFKCFPKC: string;
+    //
+    SFBKBJ: string;
+}
+
 // 考试信息查询返回结果数据类型
 export interface ExamInfoQueryRes extends QueryResRoot {
     // 考试信息列表

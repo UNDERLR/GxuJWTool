@@ -4,9 +4,10 @@ import {ElMessage} from "element-plus";
 import {ref} from "vue";
 import {http} from "@/ts/http";
 import {SchoolTerms, SchoolYears} from "@/ts/type/global";
+import {ExamInfoQueryRes} from "@/ts/type/tool/infoQuery/examInfoQuery";
 
 const staticData = {
-    year:[
+    year: [
         ["", "全部"],
         ...SchoolYears,
     ],
@@ -26,7 +27,7 @@ const staticData = {
 };
 
 const data = ref({
-    result: JSON.parse(localStorage.getItem("score") || "{}"),
+    result: JSON.parse(localStorage.getItem("examInfo") || "{}"),
     page: {
         current: 1,
         size: 15,
@@ -60,14 +61,14 @@ function query(retry = true) {
     ElMessage.info("正在查询...");
     // 通过Electron主进程发送请求
     http.post("https://jwxt2018.gxu.edu.cn/jwglxt/cjcx/cjcx_cxXsgrcj.html?doType=query", http.objectToFormUrlEncoded(formData))
-        .then(res => {
+        .then((res: ExamInfoQueryRes) => {
             if (!res) {
                 ElMessage.error("查询失败，请联系管理员");
                 return;
             }
             if (typeof res === "object") {
                 data.value.result = res;
-                localStorage.setItem("score", JSON.stringify(res));
+                localStorage.setItem("examInfo", JSON.stringify(res));
                 ElMessage.success("查询成功");
             } else if (retry) {
                 ElMessage.error("查询失败，尝试重新获取Cookie...");
@@ -98,7 +99,7 @@ function showDetail(index: number) {
 }
 
 function removeData() {
-    localStorage.setItem("score", JSON.stringify({}));
+    localStorage.setItem("examInfo", JSON.stringify({}));
     data.value.result = JSON.parse("{}");
     ElMessage.success("本地数据已清空");
 }
@@ -118,27 +119,29 @@ function copy(text: string) {
     <div class="container">
         <el-card shadow="never">
             <el-form :model="data.form" label-width="auto">
-                <el-form-item label="学年">
-                    <el-select
-                        v-model="data.form.year"
-                        filterable>
-                        <el-option
-                            v-for="(item,index) in staticData.year"
-                            :key="index"
-                            :label="item[1]"
-                            :value="index"/>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="学期">
-                    <el-select
-                        v-model="data.form.term"
-                        filterable>
-                        <el-option
-                            v-for="(item,index) in staticData.term"
-                            :key="index"
-                            :label="item[1]"
-                            :value="index"/>
-                    </el-select>
+                <el-form-item required label="学年学期">
+                    <el-col :span="12">
+                        <el-select
+                            v-model="data.form.year"
+                            filterable>
+                            <el-option
+                                v-for="(item,index) in staticData.year"
+                                :key="index"
+                                :label="item[1]"
+                                :value="index"/>
+                        </el-select>
+                    </el-col>
+                    <el-col :span="11" :offset="1">
+                        <el-select
+                            v-model="data.form.term"
+                            filterable>
+                            <el-option
+                                v-for="(item,index) in staticData.term"
+                                :key="index"
+                                :label="item[1]"
+                                :value="index"/>
+                        </el-select>
+                    </el-col>
                 </el-form-item>
                 <el-form-item label="课程标记">
                     <el-select
@@ -198,7 +201,7 @@ function copy(text: string) {
                 <el-table-column prop="cj" label="成绩" width="70px"/>
                 <el-table-column prop="xf" label="学分" width="70px"/>
                 <el-table-column prop="jd" label="绩点" width="70px"/>
-                <el-table-column prop="dateDigit" label="成绩时间" width="150px"/>
+<!--                <el-table-column prop="dateDigit" label="成绩时间" width="150px"/>-->
                 <el-table-column prop="jxbmc" label="教学班" width="190px"/>
                 <el-table-column prop="jsxm" label="教师" width="100px"/>
             </el-table>

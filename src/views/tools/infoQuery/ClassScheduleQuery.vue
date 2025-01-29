@@ -212,27 +212,29 @@ function copy(text: string) {
     <div class="container">
         <el-card shadow="never">
             <el-form :model="data.form" label-width="auto">
-                <el-form-item label="学年">
-                    <el-select
-                        v-model="data.form.year"
-                        filterable>
-                        <el-option
-                            v-for="(item,index) in staticData.year"
-                            :key="index"
-                            :label="item[1]"
-                            :value="index"/>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="学期">
-                    <el-select
-                        v-model="data.form.term"
-                        filterable>
-                        <el-option
-                            v-for="(item,index) in staticData.term"
-                            :key="index"
-                            :label="item[1]"
-                            :value="index"/>
-                    </el-select>
+                <el-form-item required label="学年学期">
+                    <el-col :span="12">
+                        <el-select
+                            v-model="data.form.year"
+                            filterable>
+                            <el-option
+                                v-for="(item,index) in staticData.year"
+                                :key="index"
+                                :label="item[1]"
+                                :value="index"/>
+                        </el-select>
+                    </el-col>
+                    <el-col :span="11" :offset="1">
+                        <el-select
+                            v-model="data.form.term"
+                            filterable>
+                            <el-option
+                                v-for="(item,index) in staticData.term"
+                                :key="index"
+                                :label="item[1]"
+                                :value="index"/>
+                        </el-select>
+                    </el-col>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="query">查询</el-button>
