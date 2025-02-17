@@ -158,10 +158,10 @@ function query(retry = true) {
                             query();
                         }
                     });
-                refreshCourseList();
             } else {
                 ElMessage.error("查询失败，请尝试手动登录或稍后再进行查询，请联系管理员");
             }
+            refreshCourseList();
         });
 }
 
@@ -297,6 +297,7 @@ function removeData() {
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="query">查询</el-button>
+                    <el-button @click="jwxt.openPage('kbcx/xskbcx_cxXskbcxIndex.html?gnmkdm=N2151&layout=default')">打开教务系统课表查询页面</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -388,7 +389,7 @@ function removeData() {
                         </div>
                     </el-col>
                 </el-row>
-                <el-row>
+                <el-row v-if="data.courseList.other.length > 0">
                     <el-col class="otherCourseContainer" :span="24">
                         <el-divider/>
                         <div>其他课程</div>
@@ -450,8 +451,8 @@ function removeData() {
                         <el-table-column width="150px" show-overflow-tooltip prop="jxbzc" label="教学班组成"/>
                     </el-table>
                 </el-space>
-                <el-divider/>
-                <el-space direction="vertical" alignment="flex-start">
+                <el-divider v-if="data.courseList.other.length > 0"/>
+                <el-space v-if="data.courseList.other.length > 0" direction="vertical" alignment="flex-start">
                     <div>其他课程</div>
                     <el-table :data="data.courseList.other" style="width: min(67vw,600px);">
                         <el-table-column width="150px" show-overflow-tooltip prop="kcmc" label="课程名称"/>

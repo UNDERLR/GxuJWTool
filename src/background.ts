@@ -2,10 +2,9 @@
 
 import {Http} from "@/electron/http";
 import {jwxt} from "@/electron/jwxt";
-import {app, protocol, BrowserWindow} from 'electron';
-import {createProtocol} from 'vue-cli-plugin-electron-builder/lib';
-import installExtension, {VUEJS3_DEVTOOLS} from 'electron-devtools-installer';
-import {ipcMain} from 'electron';
+import {app, BrowserWindow, ipcMain, protocol} from "electron";
+import {createProtocol} from "vue-cli-plugin-electron-builder/lib";
+import installExtension, {VUEJS3_DEVTOOLS} from "electron-devtools-installer";
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -82,7 +81,7 @@ async function createWindow() {
     })
 //接收关闭命令
     ipcMain.on('window-close', function () {
-        win.destroy();
+        app.quit();
     })
 
 }

@@ -31,7 +31,7 @@ async function autoGetCookies(username: string, password: string) {
     document.getElementById("dl").click();`);
                 }, 100);
                 // 判断是否登录成功
-                setTimeout( async () => {
+                setTimeout(async () => {
                     if (win.webContents.getURL().includes("login_slogin.html"))
                         resolve(await win.webContents.executeJavaScript("document.getElementById(\"tips\").innerText"));
                 }, 10000);
@@ -45,7 +45,7 @@ async function autoGetCookies(username: string, password: string) {
             }
         });
         win.loadURL(`https://jwxt2018.gxu.edu.cn/jwglxt/xtgl/login_slogin.html?time=${Date.now()}`);
-    })
+    });
 
 }
 
@@ -54,12 +54,13 @@ async function login() {
         const win = jwxt.loginWindow = new BrowserWindow({
             width: 800,
             height: 600,
+            icon: "./src/assets/icon.jpg",
         });
         win.loadURL(`https://jwxt2018.gxu.edu.cn/jwglxt/xtgl/login_slogin.html?time=${Date.now()}`);
         win.webContents.on("did-redirect-navigation", async () => {
             resolve(await getCookies());
-        })
-    })
+        });
+    });
 }
 
 async function getCookies() {
@@ -72,6 +73,32 @@ async function getCookies() {
     } else return [];
 }
 
+function openPage(url: string, cookie: any) {
+    return new Promise((resolve, reject) => {
+        const win = jwxt.loginWindow = new BrowserWindow({
+            width: 800,
+            height: 600,
+            icon: "./src/assets/icon.jpg",
+        });
+        for (const cookieKey in cookie) {
+            win.webContents.session.cookies.set({
+                url: "https://jwxt2018.gxu.edu.cn/jwglxt/",
+                name: cookieKey,
+                value: cookie[cookieKey],
+                domain: "jwxt2018.gxu.edu.cn",
+                path: "/",
+            });
+        }
+        win.on("close", e=>{
+            win.destroy();
+        })
+        win.loadURL(`https://jwxt2018.gxu.edu.cn/jwglxt/${url}`)
+            .then(() => {
+                resolve(win.webContents.getURL());
+            });
+    });
+}
+
 async function ipcHandler(args: any[]) {
     switch (args[0]) {
         case "openLoginWindow":
@@ -80,11 +107,17 @@ async function ipcHandler(args: any[]) {
             return await getCookies();
         case "autoGetCookies":
             return await autoGetCookies(args[1], args[2]);
+        case "openPage":
+            return await openPage(args[1], args[2]);
     }
 }
 
 export const jwxt = {
     loginWindow: null as BrowserWindow | null,
-    ipcHandler: ipcHandler,
-    getRouteCookie: getRouteCookie
+    ipcHandler,
+    getRouteCookie,
+    autoGetCookies,
+    login,
+    getCookies,
+    openPage,
 };

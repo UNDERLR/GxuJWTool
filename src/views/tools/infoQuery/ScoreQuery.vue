@@ -156,6 +156,7 @@ function removeData() {
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="query">查询</el-button>
+                    <el-button @click="jwxt.openPage('cjcx/cjcx_cxDgXscj.html?gnmkdm=N305005&layout=default')">打开教务系统成绩查询页面</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
