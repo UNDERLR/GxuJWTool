@@ -3,12 +3,14 @@ import {ref} from "vue";
 import {http} from "@/ts/http";
 import {ElMessage} from "element-plus";
 import {jwxt} from "@/ts/jwxt";
-import {Course} from "@/ts/type/tool/infoQuery/course";
+import {Course, OtherCourse} from "@/ts/type/tool/infoQuery/course";
 import {BaseColor, Color} from "@/ts/color";
 import {SchoolTerms, SchoolYears} from "@/ts/type/global";
+import {Clock, Location} from "@element-plus/icons-vue";
+import {ClassScheduleQueryRes} from "@/ts/type/tool/infoQuery/classScheduleAPI";
 
 const staticData = {
-    year:[
+    year: [
         ...SchoolYears,
     ],
     term: [
@@ -51,8 +53,13 @@ interface CourseItem extends Course {
     backgroundColor: string;
 }
 
+interface OtherCourseItem extends OtherCourse {
+    // 在课程表中显示的背景颜色
+    backgroundColor: string;
+}
+
 const data = ref({
-    result: JSON.parse(localStorage.getItem("classSchedule") || "{}"),
+    result: JSON.parse(localStorage.getItem("classSchedule") || "{}") as ClassScheduleQueryRes,
     classList: [
         [],
         [],
@@ -89,13 +96,14 @@ function query(retry = true) {
     ElMessage.info("正在查询...");
     // 通过Electron主进程发送请求
     http.post("https://jwxt2018.gxu.edu.cn/jwglxt/kbcx/xskbcx_cxXsgrkb.html", http.objectToFormUrlEncoded(formData))
-        .then(res => {
+        .then((res: ClassScheduleQueryRes) => {
             if (!res) {
                 ElMessage.error("查询失败，请联系管理员");
                 return;
             }
             if (typeof res === "object") {
                 randomCourseColor(res.kbList);
+                randomCourseColor(res.sjkList);
                 data.value.result = res;
                 localStorage.setItem("classSchedule", JSON.stringify(res));
                 ElMessage.success("查询成功");
@@ -166,19 +174,29 @@ function testCourseWeek(course: CourseItem): boolean {
     return res;
 }
 
-function showDetail(course: CourseItem) {
-    const details = {
-        "课程名称": course.kcmc,
-        "场地": course.cdmc,
-        "学分": course.xf,
-        "周次": course.zcd,
-        "上课时间": course.xqjmc + course.jc,
-        "考查方式": course.khfsmc,
-        "QQ群": course.qqqh,
-        "课程类别": course.kclb,
-        "教师": course.xm,
-        "教学班组成": course.jxbzc,
-    };
+function showDetail(course: CourseItem | OtherCourseItem, isOtherCourse = false) {
+    const details = isOtherCourse ? {
+            "课程名称": course.kcmc,
+            "学分": course.xf,
+            "周次": course.qsjsz,
+            "学年": course.year,
+            "学期": course.xqmmc,
+            "课程类别": course.kclb,
+            "教师姓名": course.jsxm,
+            "教学班组成": course.jxbzh,
+        }
+        : {
+            "课程名称": course.kcmc,
+            "场地": course.cdmc,
+            "学分": course.xf,
+            "周次": course.zcd,
+            "上课时间": course.xqjmc + course.jc,
+            "考查方式": course.khfsmc,
+            "QQ群": course.qqqh,
+            "课程类别": course.kclb,
+            "教师": course.xm,
+            "教学班组成": course.jxbzc,
+        };
     data.value.dialog.ori = course;
     data.value.dialog.detail = [];
     for (const key in details) {
@@ -187,13 +205,22 @@ function showDetail(course: CourseItem) {
             value: details[key]
         });
     }
-    console.log(data.value.dialog.detail)
+    console.log(data.value.dialog.detail);
     data.value.dialog.visible = true;
 }
 
 function removeData() {
     localStorage.setItem("classSchedule", JSON.stringify({}));
     data.value.result = JSON.parse("{}");
+    data.value.classList = [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+    ] as CourseItem[][];
     ElMessage.success("本地数据已清空");
 }
 
@@ -290,7 +317,54 @@ function copy(text: string) {
                         `--dy:${parseInt(course.jcs.split('-')[0])-1};`"
                         class="course">
                         <el-text>{{ course.kcmc }}</el-text>
+                        <br/>
+                        <el-text>
+                            <el-icon>
+                                <Location/>
+                            </el-icon>
+                            {{ course.cdmc }}
+                        </el-text>
+                        <br/>
+                        <el-text>
+                            <el-icon>
+                                <User/>
+                            </el-icon>
+                            {{ course.xm }}
+                        </el-text>
                     </div>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col class="otherCourseContainer" :span="24">
+                    <el-divider/>
+                    <div>其他课程</div>
+                    <el-space
+                        fill
+                        fill-ratio="50"
+                        wrap
+                        style="width: 100%;margin-top: .5em;">
+                        <div
+                            v-for="course in data.result.sjkList as OtherCourseItem[]"
+                            @click="showDetail(course,true)"
+                            :style="`background-color:${course.backgroundColor};`"
+                            class="course">
+                            <el-text>{{ course.kcmc }}</el-text>
+                            <br/>
+                            <el-text>
+                                <el-icon>
+                                    <Clock/>
+                                </el-icon>
+                                {{ course.qsjsz }}
+                            </el-text>
+                            <br/>
+                            <el-text>
+                                <el-icon>
+                                    <User/>
+                                </el-icon>
+                                {{ course.jsxm }}
+                            </el-text>
+                        </div>
+                    </el-space>
                 </el-col>
             </el-row>
         </el-card>
@@ -328,6 +402,13 @@ function copy(text: string) {
     margin-top: 1em;
 }
 
+.course {
+    border: 1px solid var(--el-border-color);
+    box-sizing: border-box;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
 .day {
     $spanHeight: 4em;
     $marginTop: 10px;
@@ -335,25 +416,27 @@ function copy(text: string) {
 
     position: relative;
 
+    .course {
+        left: 5%;
+        width: 90%;
+        top: calc(var(--dy) * $spanHeight + var(--dy) * $marginTop + $weekTextHeight);
+        min-height: calc(var(--span) * $spanHeight + (var(--span) - 1) * $marginTop);
+        height: calc(var(--span) * $spanHeight + (var(--span) - 1) * $marginTop);
+        margin-top: $marginTop;
+    }
+
     & > :first-child {
         height: $weekTextHeight;
     }
 
-    .course {
-        min-height: calc(var(--span) * $spanHeight + (var(--span) - 1) * $marginTop);
-        height: calc(var(--span) * $spanHeight + (var(--span) - 1) * $marginTop);
-        left: 5%;
-        top: calc(var(--dy) * $spanHeight + var(--dy) * $marginTop + $weekTextHeight);
-        width: 90%;
-        border: 1px solid var(--el-border-color);
-        box-sizing: border-box;
-        border-radius: 5px;
-        margin-top: $marginTop;
-        overflow: hidden;
-    }
-
     &:not(:first-child) .course {
         position: absolute;
+    }
+}
+
+.otherCourseContainer {
+    .course {
+        padding: .5em;
     }
 }
 </style>
