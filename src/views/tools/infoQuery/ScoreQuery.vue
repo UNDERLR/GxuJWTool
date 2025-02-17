@@ -5,6 +5,7 @@ import {ref} from "vue";
 import {http} from "@/ts/http";
 import {SchoolTerms, SchoolYears} from "@/ts/type/global";
 import {ExamInfoQueryRes} from "@/ts/type/tool/infoQuery/examInfoQuery";
+import {Tool} from "@/ts/tool";
 
 const staticData = {
     year: [
@@ -38,8 +39,10 @@ const data = ref({
         content: [] as string[][],
     },
     form: {
-        year: 5,
-        term: 1,
+        year: staticData.year.findIndex((item) => item[0] === (new Date().getFullYear() - 1).toString()),
+        term: Tool.inRange(new Date().getMonth() + 1, 2, 7)
+            ? staticData.term.findIndex(item => item[1] === "2")
+            : staticData.term.findIndex(item => item[1] === "1"),
         tag: 0,
     }
 });
@@ -102,16 +105,6 @@ function removeData() {
     localStorage.setItem("examInfo", JSON.stringify({}));
     data.value.result = JSON.parse("{}");
     ElMessage.success("本地数据已清空");
-}
-
-function copy(text: string) {
-    const input = document.createElement("input");
-    input.value = text;
-    document.body.appendChild(input);
-    input.select();
-    document.execCommand("copy");
-    document.body.removeChild(input);
-    ElMessage.success("已复制到剪贴板");
 }
 </script>
 
@@ -215,7 +208,7 @@ function copy(text: string) {
                     <el-table-column prop="1" label="值">
                         <template #default="scope">
                             <div
-                                @click="copy(scope.row[1])"
+                                @click="Tool.copy(scope.row[1])"
                                 style="cursor: pointer;">
                                 {{ scope.row[1] }}
                             </div>
@@ -223,7 +216,7 @@ function copy(text: string) {
                     </el-table-column>
                 </el-table>
                 <template #footer>
-                    <el-button @click="copy(JSON.stringify(data.dialog.ori))">
+                    <el-button @click="Tool.copy(JSON.stringify(data.dialog.ori))">
                         复制原始数据
                     </el-button>
                     <el-button type="primary" @click="data.dialog.visible = false">
