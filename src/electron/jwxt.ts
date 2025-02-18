@@ -78,8 +78,10 @@ function openPage(url: string, cookie: any) {
         const win = jwxt.loginWindow = new BrowserWindow({
             width: 800,
             height: 600,
+            autoHideMenuBar: true,
             icon: "./src/assets/icon.jpg",
         });
+        win.removeMenu();
         for (const cookieKey in cookie) {
             win.webContents.session.cookies.set({
                 url: "https://jwxt2018.gxu.edu.cn/jwglxt/",

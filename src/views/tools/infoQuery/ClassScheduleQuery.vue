@@ -35,8 +35,8 @@ const staticData = {
         "15:25-16:10",
         "16:20-17:05",
         "17:15-18:00",
-        "",
-        "",
+        "18:10-18:55",
+        "18:45-19:30",
         "19:40-20:25",
         "20:30-21:15",
         "21:20-22:05",
@@ -114,14 +114,18 @@ window.addEventListener("resize", () => {
 
 function refreshCourseList() {
     data.value.courseList.scheduled = [] as CourseItem[];
-    data.value.courseList.other = data.value.result.sjkList as OtherCourseItem[];
+    data.value.courseList.other = data.value.result.sjkList
+        ? data.value.result.sjkList as OtherCourseItem[]
+        : [] as OtherCourseItem[];
     const hasAdd = [];
-    data.value.result.kbList.forEach((course: CourseItem) => {
-        if (!hasAdd.includes(course.kcmc)) {
-            data.value.courseList.scheduled.push(course);
-            hasAdd.push(course.kcmc);
-        }
-    });
+    if (data.value.result.kbList) {
+        data.value.result.kbList.forEach((course: CourseItem) => {
+            if (!hasAdd.includes(course.kcmc)) {
+                data.value.courseList.scheduled.push(course);
+                hasAdd.push(course.kcmc);
+            }
+        });
+    }
 }
 
 refreshCourseList();
@@ -297,7 +301,9 @@ function removeData() {
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="query">查询</el-button>
-                    <el-button @click="jwxt.openPage('kbcx/xskbcx_cxXskbcxIndex.html?gnmkdm=N2151&layout=default')">打开教务系统课表查询页面</el-button>
+                    <el-button @click="jwxt.openPage('kbcx/xskbcx_cxXskbcxIndex.html?gnmkdm=N2151&layout=default')">
+                        打开教务系统课表查询页面
+                    </el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -305,6 +311,7 @@ function removeData() {
             :direction="data.cardDirection"
             fill
             :fill-ratio="data.cardDirection === 'vertical'? 100 : 49"
+            :wrap="false"
             alignment="flex-start"
             style="margin-top: 1em;width: 100%;">
             <el-card shadow="never">

@@ -57,6 +57,9 @@ async function createWindow() {
                 win.webContents.executeJavaScript("document.querySelector(\"#app > section > header > div > div.headerCenter > ul > li:nth-child(1)\").click()");
             })
     }
+    // 设置软件版本为全局变量
+    win.webContents.executeJavaScript(`window.version = "${app.getVersion()}"`);
+
     // 启动时获取route cookie(已废弃，登录时会自动获取)
     // const routeCookie = await jwxt.getRouteCookie();
     // await win.webContents.executeJavaScript(`document.cookie="${routeCookie}; Expires=Expires=Thu, 01 Jan 9999 00:00:01 GMT;"`)
