@@ -44,6 +44,12 @@ function menuHandler(key: string, keyPath: string[]) {
                     </el-icon>
                     <span>考试信息查询</span>
                 </el-menu-item>
+                <el-menu-item index="studentEvaluation">
+                    <el-icon>
+                        <Star/>
+                    </el-icon>
+                    <span>学生评价填写</span>
+                </el-menu-item>
             </el-menu>
         </el-aside>
         <el-main>

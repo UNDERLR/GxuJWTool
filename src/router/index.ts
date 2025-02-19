@@ -1,5 +1,5 @@
 import {defineAsyncComponent} from "vue";
-import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router';
+import {createRouter, createWebHistory, RouteRecordRaw} from "vue-router";
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -33,6 +33,11 @@ const routes: Array<RouteRecordRaw> = [
                 path: 'examInfoQuery',
                 name: 'examInfoQuery',
                 component: defineAsyncComponent(() => import('@/views/tools/infoQuery/ExamInfoQuery.vue'))
+            },
+            {
+                path: 'studentEvaluation',
+                name: 'studentEvaluation',
+                component: defineAsyncComponent(() => import('@/views/tools/eduEvaluation/StudentEvaluation.vue'))
             },
         ]
     },

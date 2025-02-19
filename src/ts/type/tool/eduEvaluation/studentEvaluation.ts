@@ -1,4 +1,6 @@
-interface IUnknown {
+import {QueryModel, UserModel} from "@/ts/type/global";
+
+export interface StudentEvaluationItem {
 	//日期
 	date: string;
 	//日期数字格式
@@ -39,12 +41,12 @@ interface IUnknown {
 	"pjmbmcb_id": string;
 	//评价状态
 	pjzt: string;
-	queryModel: IQueryModel;
+	queryModel: QueryModel;
 	//？
 	rangeable: boolean;
 	//列ID
 	"row_id": string;
-	//是否成绩录入教师（什么几把）
+	//是否成绩录入结束
 	sfcjlrjs: string;
 	//上课时间
 	sksj: string;
@@ -55,7 +57,7 @@ interface IUnknown {
 	//总结果
 	totalResult: string;
 	//
-	userModel: IUserModel;
+	userModel: UserModel;
 	//学年名
 	xnm: string;
 	//学期名
@@ -68,32 +70,4 @@ interface IUnknown {
 	year: string;
 	//职称名称
 	zcmc: string;
-}
-
-
-/* 自动生成的 Interface */
-
-interface IUserModel {
-	monitor: boolean;
-	roleCount: number;
-	roleKeys: string;
-	roleValues: string;
-	status: number;
-	usable: boolean;
-}
-
-
-interface IQueryModel {
-	currentPage: number;
-	currentResult: number;
-	entityOrField: boolean;
-	limit: number;
-	offset: number;
-	pageNo: number;
-	pageSize: number;
-	showCount: number;
-	sorts: void /* undefined */[];
-	totalCount: number;
-	totalPage: number;
-	totalResult: number;
 }
