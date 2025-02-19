@@ -104,15 +104,19 @@ export interface SjkList {
 	qsjsz: string;
 	//全套课程格式
 	qtkcgs: string;
+	//查询参数模型
 	queryModel: QueryModel;
+	//是否支持翻页
 	rangeable: boolean;
-	//
+	//人数定制教室？
 	rsdzjs: number;
 	//是否实践课
 	sfsjk: string;
 	//实践课程格式
 	sjkcgs: string;
+	//总查询结果数
 	totalResult: string;
+	//用户信息模型
 	userModel: UserModel;
 	//学分
 	xf: string;
@@ -242,48 +246,50 @@ export interface KbList {
 	userModel: UserModel;
 	//学分
 	xf: string;
-	//
+	//选课标志
 	xkbz: string;
-	//姓名
+	//（教师）姓名
 	xm: string;
 	//学年名
 	xnm: string;
 	//学期代码
 	xqdm: string;
-	//学期号
+	//学期号1
 	xqh1: string;
+	//学期号ID
 	xqh_id: string;
-	//
+	//星期几
 	xqj: string;
+	//星期几名称
 	xqjmc: string;
-	//学期名
-	xqm: string;
-	//学期名称
-	xqmc: string;
 	//
+	xqm: string;
+	//
+	xqmc: string;
+	//学生代码
 	xsdm: string;
 	//学生类型标记
 	xslxbj: string;
 	//年份
 	year: string;
-	//周次
+	//哪周上课
 	zcd: string;
-	//周次名称
+	//职称名称
 	zcmc: string;
-	//
+	//主副讲/教名称
 	zfjmc: string;
 	//周（zhou）学时
 	zhxs: string;
 	//总（zong）学时
 	zxs: string;
 	zxxx: string;
-	//
+	//专业方向名称
 	zyfxmc: string;
 	//专业核心课程标记
 	zyhxkcbj: string;
 	//政治面貌
 	zzmm: string;
-	//总容量
+	//总容量（该教学班总人数）
 	zzrl: string;
 }
 
