@@ -22,6 +22,7 @@
     "electron-icon-builder": "^2.0.1",
     "electron-store": "^10.0.0",
     "element-plus": "^2.9.3",
+    "npm": "^11.1.0",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "webpack": "^5.97.1",

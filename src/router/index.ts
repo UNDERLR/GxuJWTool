@@ -34,6 +34,11 @@ const routes: Array<RouteRecordRaw> = [
                 name: 'examInfoQuery',
                 component: defineAsyncComponent(() => import('@/views/tools/infoQuery/ExamInfoQuery.vue'))
             },
+            {
+                path: 'SchoolCalendar',
+                name: 'SchoolCalendar',
+                component: defineAsyncComponent(() => import('@/views/tools/infoQuery/SchoolCalendar.vue'))
+            },
         ]
     },
     {
