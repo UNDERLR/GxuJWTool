@@ -70,7 +70,7 @@ export interface UserModel {
 }
 //实践课
 export interface SjkList {
-	//重修班级
+	//重修标记
 	cxbj: string;
 	//日期
 	date: string;
@@ -108,7 +108,7 @@ export interface SjkList {
 	queryModel: QueryModel;
 	//是否支持翻页
 	rangeable: boolean;
-	//人数定制教室？
+	//(用来遍历显示课程表的)
 	rsdzjs: number;
 	//是否实践课
 	sfsjk: string;
@@ -150,7 +150,7 @@ export interface XqjmcMap {
 }
 
 export interface KbList {
-	//板块类型等级名称
+	//板块(类型)等级名称（原文叫板块等级）
 	bklxdjmc: string;
 	//场地ID
 	cd_id: string;
@@ -200,7 +200,7 @@ export interface KbList {
 	kclb: string;
 	//课程名称
 	kcmc: string;
-	//课程学生组成
+	//课程学时组成
 	kcxszc: string;
 	//课程性质
 	kcxz: string;
@@ -234,7 +234,7 @@ export interface KbList {
 	rangeable: boolean;
 	//
 	rk: string;
-	//人数定制教师
+	//(用来遍历显示课程表的)
 	rsdzjs: number;
 	//是否缴费
 	sfjf: string;
@@ -246,7 +246,7 @@ export interface KbList {
 	userModel: UserModel;
 	//学分
 	xf: string;
-	//选课标志
+	//选课备注
 	xkbz: string;
 	//（教师）姓名
 	xm: string;
@@ -256,15 +256,15 @@ export interface KbList {
 	xqdm: string;
 	//学期号1
 	xqh1: string;
-	//学期号ID
+	//校区号ID
 	xqh_id: string;
 	//星期几
 	xqj: string;
 	//星期几名称
 	xqjmc: string;
-	//
+	//学期码
 	xqm: string;
-	//
+	//校区名称
 	xqmc: string;
 	//学生代码
 	xsdm: string;
@@ -276,12 +276,13 @@ export interface KbList {
 	zcd: string;
 	//职称名称
 	zcmc: string;
-	//主副讲/教名称
+	//主辅讲/教名称
 	zfjmc: string;
 	//周（zhou）学时
 	zhxs: string;
 	//总（zong）学时
 	zxs: string;
+	//在线信息
 	zxxx: string;
 	//专业方向名称
 	zyfxmc: string;
@@ -289,7 +290,7 @@ export interface KbList {
 	zyhxkcbj: string;
 	//政治面貌
 	zzmm: string;
-	//总容量（该教学班总人数）
+	//最终容量
 	zzrl: string;
 }
 
@@ -302,20 +303,26 @@ export interface XsbjList {
 
 export interface ResRoot {
 	qsxqj: string;
+	//学生信息（姓名学院学年学期学号）
 	xsxx: Xsxx;
 	sjkList: SjkList[];
 	xqjmcMap: XqjmcMap;
+	//学生课表是否显示调课状态
 	xskbsfxstkzt: string;
 	rqazcList: any[];
 	xsbjList: XsbjList[];
 	zckbsfxssj: string;
 	djdzList: any[];
+	//课表类型
 	kblx: number;
 	sfxsd: string;
+	//缴费查课表开关（如实）
 	jfckbkg: boolean;
 	xqbzxxszList: any[];
+	//选课开关
 	xkkg: boolean;
 	sxgykbbz: string;
+	//教学环节课程
 	jxhjkcList: any[];
 	xnxqsfkz: string;
 }
