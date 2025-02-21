@@ -1,6 +1,6 @@
 {
   "name": "gxu-jw-tool",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "author": "HuanChen",
   "description": "广西大学教务系统工具",
   "private": true,
@@ -21,6 +21,7 @@
     "core-js": "^3.8.3",
     "electron-icon-builder": "^2.0.1",
     "electron-store": "^10.0.0",
+    "electron-updater": "^6.3.9",
     "element-plus": "^2.9.3",
     "npm": "^11.1.0",
     "vue": "^3.2.13",

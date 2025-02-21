@@ -57,9 +57,10 @@ function getCookies() {
 
 <template>
     <el-card shadow="hover">
-        <template #header>登录</template>
+        <template #header>获取Cookie</template>
+        仅用于获取教务系统的Cookie。自动登录才可以保留帐密，手动登入需要每次输入帐密。
         <el-tabs>
-            <el-tab-pane label="自动登录">
+            <el-tab-pane label="自动登录获取">
                 <p>请输入教务系统的用户名和密码，默认保存登录信息，当cookie失效时自动获取。</p>
                 <p>重新输入用户名或密码后，重新登录可修改保存的登录信息。</p>
                 <p>若多次登录失败出现验证码，请尝试使用手动登录方式或一段时间后再次尝试自动登录。</p>
@@ -78,7 +79,7 @@ function getCookies() {
                     </el-form-item>
                 </el-form>
             </el-tab-pane>
-            <el-tab-pane label="手动登录">
+            <el-tab-pane label="手动登录获取">
                 <p>在登录页进入教务系统主页后，会尝试自动获取Cookie，如果未生效，请手动点击“获取Cookies”按钮。</p>
                 <p>重复登录会刷新Cookies。</p>
                 <el-space>
